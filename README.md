@@ -59,5 +59,5 @@ To reset the demo data, clear the site's Local Storage in your browser's develop
 ## Notes
 
 - Made for **ISIT207 Frontend Web Programming** (University of Wollongong, Assignment 2).
-- All car designs, names, addresses and phone numbers are fictional. Images were AI-generated.
-- Built with the help of an AI assistant (Claude).
+- All car designs, names, addresses and phone numbers are fictional.
+- Developed with AI assistance (Claude). Images were created with AI tools.
