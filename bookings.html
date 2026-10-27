@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport: makes the page scale correctly on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Bookings | AZoom Car Rental</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"></a>
+<nav>
+<ul>
+  <li><a href="index.html" class="Home">Home</a></li>
+  <li><a href="cars.html" class="Cars">Cars</a></li>
+  <li><a href="reserve.html" class="Reserve">Reserve</a></li>
+  <li><a href="bookings.html" class="MyBookings active">My Bookings</a></li>
+  <li><a href="login.html" class="Login">Login</a></li>
+</ul>
+</nav>
+</header>
+
+  <main>
+<section class="page-hero">
+  <h1 class="page-title">My Bookings</h1>
+  <p class="page-intro">Track every rental, from your online booking to the final bill.</p>
+  <p class="user-line">Logged in as <span id="user-name" class="user-name">Guest</span></p>
+</section>
+
+<section class="booking-section">
+  <!-- the booking cards are added here by js/bookings.js -->
+  <div id="booking-list" class="booking-list"></div>
+</section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-copyright">&copy; 2026 AZoom Car Rental. Luxury for less. All rights reserved.</p>
+    <p class="footer-email">Email: <a href="mailto:hello@azoom.com" class="email-link">hello@azoom.com</a></p>
+    <p class="footer-staff"><a href="staff.html" class="staff-link">Staff Portal</a></p>
+    <p class="JHyper">JHyper</p>
+  </footer>
+
+  <!-- load JS at the end of body so the page loads first -->
+  <script src="js/data.js"></script>
+  <script src="js/bookings.js"></script>
+</body>
+</html>

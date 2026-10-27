@@ -1,0 +1,5 @@
+# files that should NOT be uploaded to GitHub
+.DS_Store
+images/originals/
+css/style-backup-green-orange.css
+js/data-backup.js

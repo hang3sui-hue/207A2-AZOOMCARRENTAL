@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport: makes the page scale correctly on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Portal | AZoom Car Rental</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"></a>
+<nav>
+<ul>
+  <li><a href="index.html" class="Home">Home</a></li>
+  <li><a href="cars.html" class="Cars">Cars</a></li>
+  <li><a href="reserve.html" class="Reserve">Reserve</a></li>
+  <li><a href="bookings.html" class="MyBookings">My Bookings</a></li>
+  <li><a href="login.html" class="Login">Login</a></li>
+</ul>
+</nav>
+</header>
+
+  <main>
+<section class="page-hero">
+  <h1 class="page-title">Staff Portal</h1>
+  <p class="page-intro">Hand over cars, inspect returned cars and create the final bill.</p>
+  <p class="user-line">Logged in as <span id="staff-name" class="user-name">Staff</span></p>
+</section>
+
+<section class="stats">
+  <div class="stat-card">
+    <p class="stat-number">0</p>
+    <p class="stat-label">Pick-ups today</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-number">0</p>
+    <p class="stat-label">Cars on the road</p>
+  </div>
+  <div class="stat-card stat-alert">
+    <p class="stat-number">0</p>
+    <p class="stat-label">Waiting for inspection</p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-number">0</p>
+    <p class="stat-label">Cars available</p>
+  </div>
+</section>
+
+<section class="staff-section">
+  <h2 class="section-title">All Bookings</h2>
+  <div class="table-box">
+    <table class="booking-table">
+      <thead>
+        <tr>
+          <th>Booking</th>
+          <th>Customer</th>
+          <th>Car</th>
+          <th>Dates</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="staff-table-body">
+        <!-- the rows are added here by js/staff.js -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="inspection" class="staff-section inspection-section">
+  <h2 class="section-title">Inspect Returned Car</h2>
+  <form id="inspection-form" class="inspection-form">
+
+    <div class="form-grid">
+      <div class="form-row">
+        <label for="inspect-booking" class="form-label">Booking</label>
+        <select id="inspect-booking" class="form-input" required>
+          <option value="">-- Choose a returned car --</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="inspect-carpark" class="form-label">Found at car park</label>
+        <select id="inspect-carpark" class="form-input" required>
+          <option value="King Road Car Park">Level B1, King Road Car Park</option>
+          <option value="Queen Road Car Park">Level 1, Queen Road Car Park</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label for="inspect-battery" class="form-label">Battery level (%)</label>
+        <input type="number" id="inspect-battery" class="form-input" min="0" max="100" placeholder="65" required>
+      </div>
+      <div class="form-row">
+        <label for="inspect-km" class="form-label">Distance driven (km)</label>
+        <input type="number" id="inspect-km" class="form-input" min="0" placeholder="420" required>
+      </div>
+    </div>
+
+    <fieldset class="damage-list">
+      <legend class="form-label">Damage checklist</legend>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="150">
+        <span class="damage-name">Scratch on body</span>
+        <span class="damage-fee">$150</span>
+      </label>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="400">
+        <span class="damage-name">Dent on body</span>
+        <span class="damage-fee">$400</span>
+      </label>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="300">
+        <span class="damage-name">Broken light or mirror</span>
+        <span class="damage-fee">$300</span>
+      </label>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="250">
+        <span class="damage-name">Tyre or wheel damage</span>
+        <span class="damage-fee">$250</span>
+      </label>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="120">
+        <span class="damage-name">Interior stain - cleaning needed</span>
+        <span class="damage-fee">$120</span>
+      </label>
+      <label class="damage-item">
+        <input type="checkbox" class="check-input damage-check" value="50">
+        <span class="damage-name">Battery below 20%</span>
+        <span class="damage-fee">$50</span>
+      </label>
+      <div class="damage-item">
+        <label for="late-days" class="damage-name">Late return (days)</label>
+        <input type="number" id="late-days" class="form-input late-input" min="0" value="0">
+        <span class="damage-fee">$100 / day</span>
+      </div>
+    </fieldset>
+
+    <div class="form-row">
+      <label for="inspect-notes" class="form-label">Notes</label>
+      <textarea id="inspect-notes" class="form-input" rows="3" placeholder="Small scratch on the rear left door."></textarea>
+    </div>
+    <div class="form-row">
+      <label for="inspect-photos" class="form-label">Photos of damage</label>
+      <input type="file" id="inspect-photos" class="form-input" accept="image/*" multiple>
+    </div>
+    <div class="form-row">
+      <label for="car-status" class="form-label">Car status after inspection</label>
+      <select id="car-status" class="form-input">
+        <option value="available">Ready to rent again</option>
+        <option value="repair">Needs repair</option>
+        <option value="cleaning">Needs cleaning</option>
+      </select>
+    </div>
+
+    <div class="extra-total">
+      <span class="extra-label">Extra charges</span>
+      <span id="extra-amount" class="price">$0</span>
+    </div>
+    <p id="inspect-message" class="form-error"></p>
+    <button type="submit" class="btn form-submit">Save Inspection and Create Bill</button>
+  </form>
+</section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-copyright">&copy; 2026 AZoom Car Rental. Luxury for less. All rights reserved.</p>
+    <p class="footer-email">Email: <a href="mailto:hello@azoom.com" class="email-link">hello@azoom.com</a></p>
+    <p class="footer-staff"><a href="staff.html" class="staff-link">Staff Portal</a></p>
+    <p class="JHyper">JHyper</p>
+  </footer>
+
+  <!-- load JS at the end of body so the page loads first -->
+  <script src="js/data.js"></script>
+  <script src="js/staff.js"></script>
+</body>
+</html>

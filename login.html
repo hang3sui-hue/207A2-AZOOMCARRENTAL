@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport: makes the page scale correctly on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | AZoom Car Rental</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"></a>
+<nav>
+<ul>
+  <li><a href="index.html" class="Home">Home</a></li>
+  <li><a href="cars.html" class="Cars">Cars</a></li>
+  <li><a href="reserve.html" class="Reserve">Reserve</a></li>
+  <li><a href="bookings.html" class="MyBookings">My Bookings</a></li>
+  <li><a href="login.html" class="Login active">Login</a></li>
+</ul>
+</nav>
+</header>
+
+  <main>
+<section class="login-section">
+  <div class="login-card">
+    <h1 class="login-title">Welcome Back</h1>
+    <p class="login-intro">Log in to reserve a car and manage your bookings.</p>
+
+    <form id="login-form" class="login-form">
+      <div class="role-switch">
+        <label class="role-option">
+          <input type="radio" name="role" value="customer" class="role-input" checked>
+          <span class="role-text">Customer</span>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="staff" class="role-input">
+          <span class="role-text">Staff</span>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label for="login-email" class="form-label">Email</label>
+        <input type="email" id="login-email" class="form-input" placeholder="customer@azoom.com" required>
+      </div>
+      <div class="form-row">
+        <label for="login-password" class="form-label">Password</label>
+        <input type="password" id="login-password" class="form-input" placeholder="Your password" required>
+      </div>
+
+      <label class="check-option">
+        <input type="checkbox" id="remember" class="check-input">
+        <span class="check-text">Remember me</span>
+      </label>
+
+      <p id="login-error" class="form-error"></p>
+      <button type="submit" class="btn form-submit">Login</button>
+    </form>
+
+    <div class="demo-box">
+      <p class="demo-title">Demo accounts</p>
+      <p class="demo-line">Customer: customer@azoom.com / 1234</p>
+      <p class="demo-line">Staff: staff@azoom.com / 1234</p>
+    </div>
+
+    <p class="login-switch">New to AZoom? <a href="#register" class="text-link">Create an account</a></p>
+  </div>
+
+  <div id="register" class="login-card register-card">
+    <h2 class="login-title">Create an Account</h2>
+    <p class="login-intro">It only takes a minute.</p>
+    <form id="register-form" class="login-form">
+      <div class="form-row">
+        <label for="reg-name" class="form-label">Full name</label>
+        <input type="text" id="reg-name" class="form-input" placeholder="Jack Tan" required>
+      </div>
+      <div class="form-row">
+        <label for="reg-email" class="form-label">Email</label>
+        <input type="email" id="reg-email" class="form-input" placeholder="jack@example.com" required>
+      </div>
+      <div class="form-row">
+        <label for="reg-password" class="form-label">Password (at least 6 characters)</label>
+        <input type="password" id="reg-password" class="form-input" minlength="6" required>
+      </div>
+      <div class="form-row">
+        <label for="reg-confirm" class="form-label">Confirm password</label>
+        <input type="password" id="reg-confirm" class="form-input" minlength="6" required>
+      </div>
+      <p id="register-error" class="form-error"></p>
+      <button type="submit" class="ViewCars form-submit">Create Account</button>
+    </form>
+  </div>
+</section>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-copyright">&copy; 2026 AZoom Car Rental. Luxury for less. All rights reserved.</p>
+    <p class="footer-email">Email: <a href="mailto:hello@azoom.com" class="email-link">hello@azoom.com</a></p>
+    <p class="footer-staff"><a href="staff.html" class="staff-link">Staff Portal</a></p>
+    <p class="JHyper">JHyper</p>
+  </footer>
+
+  <!-- load JS at the end of body so the page loads first -->
+  <script src="js/data.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

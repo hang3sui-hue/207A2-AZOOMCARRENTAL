@@ -1,0 +1,244 @@
+// ===== AZoom Car Rental - Staff Portal =====
+// 1. Show numbers and a table of all bookings
+// 2. Hand over the keys when a customer picks up a car
+// 3. Inspect a returned car, add damage fees, and create the final bill
+
+// ---------- 1. Get the HTML elements ----------
+const staffNameText = document.querySelector("#staff-name");
+const statNumbers = document.querySelectorAll(".stat-number");
+const tableBody = document.querySelector("#staff-table-body");
+
+const inspectionForm = document.querySelector("#inspection-form");
+const inspectSelect = document.querySelector("#inspect-booking");
+const carparkSelect = document.querySelector("#inspect-carpark");
+const batteryInput = document.querySelector("#inspect-battery");
+const kmInput = document.querySelector("#inspect-km");
+const damageChecks = document.querySelectorAll(".damage-check");
+const lateDaysInput = document.querySelector("#late-days");
+const notesInput = document.querySelector("#inspect-notes");
+const photosInput = document.querySelector("#inspect-photos");
+const carStatusSelect = document.querySelector("#car-status");
+const extraAmountText = document.querySelector("#extra-amount");
+const inspectMessage = document.querySelector("#inspect-message");
+
+const LATE_FEE_PER_DAY = 100;
+
+// ---------- 2. Only staff can use this page ----------
+function checkStaff() {
+  const user = getCurrentUser();
+  if (user === null || user.role !== "staff") {
+    document.querySelector("main").innerHTML = `
+      <section class="login-section">
+        <div class="login-card">
+          <h1 class="login-title">Staff Only</h1>
+          <p class="login-intro">Please log in with a staff account to use the Staff Portal.</p>
+          <a href="login.html" class="btn">Go to Login</a>
+        </div>
+      </section>
+    `;
+    return false;
+  }
+  staffNameText.textContent = "Staff - " + user.name;
+  return true;
+}
+
+// ---------- 3. Count how many bookings have a status ----------
+function countStatus(list, status) {
+  let count = 0;
+  for (const booking of list) {
+    if (booking.status === status) {
+      count++;
+    }
+  }
+  return count;
+}
+
+// ---------- 4. Show the 4 numbers at the top ----------
+function displayStats(list) {
+  let availableCars = 0;
+  for (const car of cars) {
+    if (car.available === true) {
+      availableCars++;
+    }
+  }
+  // cars that are booked or on the road are not free
+  availableCars = availableCars - countStatus(list, "reserved") - countStatus(list, "picked");
+
+  statNumbers[0].textContent = countStatus(list, "reserved");
+  statNumbers[1].textContent = countStatus(list, "picked");
+  statNumbers[2].textContent = countStatus(list, "returned");
+  statNumbers[3].textContent = availableCars;
+}
+
+// ---------- 5. What to show in the "Action" column ----------
+function makeAction(booking) {
+  if (booking.status === "reserved") {
+    return `<button type="button" class="table-btn handover-btn" data-ref="${booking.ref}">Hand Over Keys</button>`;
+  }
+  if (booking.status === "picked") {
+    return `<span class="table-wait">On the road</span>`;
+  }
+  if (booking.status === "returned") {
+    return `<button type="button" class="table-btn table-btn-main inspect-btn" data-ref="${booking.ref}">Inspect</button>`;
+  }
+  if (booking.status === "inspected") {
+    return `<span class="table-wait">Waiting for payment</span>`;
+  }
+  if (booking.status === "paid") {
+    return `<span class="table-wait">Done</span>`;
+  }
+  return `<span class="table-wait">Cancelled</span>`;
+}
+
+// ---------- 6. Show the table of all bookings ----------
+function displayTable(list) {
+  let html = "";
+
+  // newest booking first (slice() makes a copy so the saved order does not change)
+  const newestFirst = list.slice().reverse();
+
+  for (const booking of newestFirst) {
+    const car = findCar(booking.carId);
+    html += `
+      <tr>
+        <td>${booking.ref}</td>
+        <td>${booking.name}</td>
+        <td>${car.name}</td>
+        <td>${formatDate(booking.pickupDate)} · ${formatPeriod(booking.duration, booking.period)}</td>
+        <td><span class="status ${statusClass[booking.status]}">${statusText[booking.status]}</span></td>
+        <td>${makeAction(booking)}</td>
+      </tr>
+    `;
+  }
+
+  tableBody.innerHTML = html;
+}
+
+// ---------- 7. Fill the "Booking" drop-down with returned cars ----------
+function fillInspectOptions(list) {
+  let html = `<option value="">-- Choose a returned car --</option>`;
+  for (const booking of list) {
+    if (booking.status === "returned") {
+      const car = findCar(booking.carId);
+      html += `<option value="${booking.ref}">${booking.ref} - ${car.name} - ${booking.name}</option>`;
+    }
+  }
+  inspectSelect.innerHTML = html;
+}
+
+// ---------- 8. Show everything again (after any change) ----------
+function refreshPage() {
+  const bookings = getBookings();
+  displayStats(bookings);
+  displayTable(bookings);
+  fillInspectOptions(bookings);
+}
+
+// ---------- 9. Work out the extra charges while staff tick the boxes ----------
+function getExtraCharges() {
+  let total = 0;
+  for (const box of damageChecks) {
+    if (box.checked === true) {
+      total = total + Number(box.value);
+    }
+  }
+  total = total + Number(lateDaysInput.value) * LATE_FEE_PER_DAY;
+  return total;
+}
+
+function updateExtra() {
+  extraAmountText.textContent = "$" + getExtraCharges();
+}
+
+inspectionForm.addEventListener("change", updateExtra);
+inspectionForm.addEventListener("input", updateExtra);
+
+// if the battery is below 20%, tick "Battery below 20%" for the staff
+batteryInput.addEventListener("input", function () {
+  for (const box of damageChecks) {
+    const name = box.parentElement.querySelector(".damage-name").textContent;
+    if (name === "Battery below 20%") {
+      box.checked = batteryInput.value !== "" && Number(batteryInput.value) < 20;
+    }
+  }
+  updateExtra();
+});
+
+// when staff choose a booking, show the car park the customer used
+inspectSelect.addEventListener("change", function () {
+  const booking = findBooking(getBookings(), inspectSelect.value);
+  if (booking !== null && booking.returnCarpark !== "") {
+    carparkSelect.value = booking.returnCarpark;
+  }
+  inspectMessage.textContent = "";
+});
+
+// ---------- 10. Table buttons: Hand Over Keys and Inspect ----------
+tableBody.addEventListener("click", function (event) {
+  const button = event.target;
+  const ref = button.dataset.ref;
+
+  if (button.classList.contains("handover-btn")) {
+    const bookings = getBookings();
+    const booking = findBooking(bookings, ref);
+    booking.status = "picked";
+    saveBookings(bookings);
+    refreshPage();
+  }
+
+  if (button.classList.contains("inspect-btn")) {
+    inspectSelect.value = ref;
+    inspectSelect.dispatchEvent(new Event("change"));
+    document.querySelector("#inspection").scrollIntoView({ behavior: "smooth" });
+  }
+});
+
+// ---------- 11. Save the inspection and create the final bill ----------
+inspectionForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const bookings = getBookings();
+  const booking = findBooking(bookings, inspectSelect.value);
+  if (booking === null) {
+    inspectMessage.textContent = "Please choose a returned car first.";
+    return;
+  }
+
+  // make a list of the damage that was ticked
+  const damages = [];
+  for (const box of damageChecks) {
+    if (box.checked === true) {
+      const name = box.parentElement.querySelector(".damage-name").textContent;
+      damages.push({ name: name, fee: Number(box.value) });
+    }
+  }
+
+  const lateDays = Number(lateDaysInput.value);
+  if (lateDays > 0) {
+    damages.push({ name: "Late return: " + lateDays + " day(s)", fee: lateDays * LATE_FEE_PER_DAY });
+  }
+
+  // save the result in the booking
+  booking.damages = damages;
+  booking.extra = getExtraCharges();
+  booking.notes = notesInput.value.trim();
+  booking.battery = Number(batteryInput.value);
+  booking.km = Number(kmInput.value);
+  booking.photos = photosInput.files.length;
+  booking.carStatus = carStatusSelect.value;
+  booking.status = "inspected";
+  saveBookings(bookings);
+
+  inspectMessage.textContent = "Saved. The final bill for " + booking.ref + " is now on the customer's My Bookings page.";
+  inspectMessage.classList.add("form-success");
+
+  inspectionForm.reset();
+  updateExtra();
+  refreshPage();
+});
+
+// ---------- 12. When the page opens ----------
+if (checkStaff() === true) {
+  refreshPage();
+  updateExtra();
+}

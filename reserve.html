@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport: makes the page scale correctly on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reserve Your Car | AZoom Car Rental</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo"></a>
+<nav>
+<ul>
+  <li><a href="index.html" class="Home">Home</a></li>
+  <li><a href="cars.html" class="Cars">Cars</a></li>
+  <li><a href="reserve.html" class="Reserve active">Reserve</a></li>
+  <li><a href="bookings.html" class="MyBookings">My Bookings</a></li>
+  <li><a href="login.html" class="Login">Login</a></li>
+</ul>
+</nav>
+</header>
+
+  <main>
+<section class="page-hero">
+  <h1 class="page-title">Reserve Your Car</h1>
+  <p class="page-intro">Four simple steps. Choose your car, pick your dates, tell us about the driver, and pay with your credit card.</p>
+</section>
+
+<section class="reserve-section">
+  <form id="reserve-form" class="reserve-form">
+
+    <fieldset class="form-block">
+      <legend class="form-legend"><span class="form-step">01</span> Choose Your Car</legend>
+      <div class="form-row">
+        <label for="car-select" class="form-label">Car</label>
+        <select id="car-select" class="form-input" required>
+      <option value="">-- Please choose a car --</option>
+      <option value="1">AZoom Aurora - Hypercar - $199 / day</option>
+      <option value="2">AZoom Noir GT - Grand Tourer - $149 / day</option>
+      <option value="3">AZoom Celeste - SUV - $139 / day</option>
+      <option value="5">AZoom Volt S - Sedan - $99 / day</option>
+      <option value="6">AZoom Breeze - Convertible - $169 / day</option>
+      <option value="7">AZoom Summit - SUV - $119 / day</option>
+      <option value="8">AZoom Pulse - Hatchback - $79 / day</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-block">
+      <legend class="form-legend"><span class="form-step">02</span> Rental Details</legend>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="pickup-branch" class="form-label">Pick-up branch</label>
+          <select id="pickup-branch" class="form-input" required>
+            <option value="">-- Choose a branch --</option>
+            <option value="King Branch">AZoom - King Branch</option>
+            <option value="Queen Branch">AZoom - Queen Branch</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="pickup-date" class="form-label">Pick-up date</label>
+          <input type="date" id="pickup-date" class="form-input" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <span class="form-label">Rental period</span>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="period" value="day" class="radio-input" checked>
+            <span class="radio-text">Daily</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="period" value="week" class="radio-input">
+            <span class="radio-text">Weekly</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="period" value="month" class="radio-input">
+            <span class="radio-text">Monthly</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="duration" class="form-label">How many (days / weeks / months)</label>
+          <input type="number" id="duration" class="form-input" min="1" max="30" value="1" required>
+        </div>
+        <div class="form-row">
+          <label for="return-carpark" class="form-label">Return car park</label>
+          <select id="return-carpark" class="form-input" required>
+            <option value="">-- Choose a car park --</option>
+            <option value="King Road Car Park">Level B1, King Road Car Park</option>
+            <option value="Queen Road Car Park">Level 1, Queen Road Car Park</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-block">
+      <legend class="form-legend"><span class="form-step">03</span> Driver Details</legend>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="full-name" class="form-label">Full name</label>
+          <input type="text" id="full-name" class="form-input" placeholder="Jack Tan" required>
+        </div>
+        <div class="form-row">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-input" placeholder="jack@example.com" required>
+        </div>
+        <div class="form-row">
+          <label for="phone" class="form-label">Phone</label>
+          <input type="tel" id="phone" class="form-input" placeholder="+65 9123 4567" required>
+        </div>
+        <div class="form-row">
+          <label for="licence" class="form-label">Driving licence number</label>
+          <input type="text" id="licence" class="form-input" placeholder="S1234567A" required>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-block">
+      <legend class="form-legend"><span class="form-step">04</span> Credit Card Payment</legend>
+      <p class="form-note">We only accept credit cards. A refundable deposit of $500 is paid now together with your rental.</p>
+      <p class="card-types">Visa · Mastercard · American Express</p>
+      <div class="form-row">
+        <label for="card-name" class="form-label">Name on card</label>
+        <input type="text" id="card-name" class="form-input" placeholder="JACK TAN" required>
+      </div>
+      <div class="form-row">
+        <label for="card-number" class="form-label">Card number</label>
+        <input type="text" id="card-number" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" inputmode="numeric" required>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="card-expiry" class="form-label">Expiry date (MM/YY)</label>
+          <input type="text" id="card-expiry" class="form-input" placeholder="08/29" maxlength="5" required>
+        </div>
+        <div class="form-row">
+          <label for="card-cvv" class="form-label">CVV</label>
+          <input type="password" id="card-cvv" class="form-input" placeholder="123" maxlength="4" inputmode="numeric" required>
+        </div>
+      </div>
+      <label class="check-option">
+        <input type="checkbox" id="terms" class="check-input" required>
+        <span class="check-text">I agree to the rental terms. I will return the car to the chosen car park on time.</span>
+      </label>
+      <p id="form-error" class="form-error"></p>
+    </fieldset>
+
+    <button type="submit" class="btn form-submit">Confirm and Pay</button>
+  </form>
+
+  <aside class="summary">
+    <h2 class="summary-title">Booking Summary</h2>
+    <img src="images/car-1.jpg" alt="Your chosen car" id="summary-img" class="summary-img">
+    <dl class="summary-list">
+      <div class="summary-row"><dt>Car</dt><dd id="sum-car">-</dd></div>
+      <div class="summary-row"><dt>Pick-up</dt><dd id="sum-branch">-</dd></div>
+      <div class="summary-row"><dt>Date</dt><dd id="sum-date">-</dd></div>
+      <div class="summary-row"><dt>Period</dt><dd id="sum-period">-</dd></div>
+      <div class="summary-row"><dt>Return to</dt><dd id="sum-carpark">-</dd></div>
+      <div class="summary-row"><dt>Rental cost</dt><dd id="sum-rental">$0</dd></div>
+      <div class="summary-row"><dt>Deposit (refundable)</dt><dd id="sum-deposit">$500</dd></div>
+      <div class="summary-row summary-total"><dt>Total to pay now</dt><dd id="sum-total">$500</dd></div>
+    </dl>
+    <p class="summary-note">Any damage found when you return the car will be added to your final bill.</p>
+  </aside>
+</section>
+
+<!-- confirmation pop-up, shown by JavaScript after payment -->
+<dialog id="confirm-dialog" class="modal">
+  <h2 class="modal-title">Booking Confirmed</h2>
+  <p class="modal-text">Thank you. Your booking number is <strong id="booking-ref" class="booking-ref">AZ-0000</strong>.</p>
+  <p class="modal-text">Please bring your driving licence and the same credit card when you pick up the car.</p>
+  <div class="modal-actions">
+    <a href="bookings.html" class="btn">View My Bookings</a>
+    <button type="button" id="close-dialog" class="ViewCars">Close</button>
+  </div>
+</dialog>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-copyright">&copy; 2026 AZoom Car Rental. Luxury for less. All rights reserved.</p>
+    <p class="footer-email">Email: <a href="mailto:hello@azoom.com" class="email-link">hello@azoom.com</a></p>
+    <p class="footer-staff"><a href="staff.html" class="staff-link">Staff Portal</a></p>
+    <p class="JHyper">JHyper</p>
+  </footer>
+
+  <!-- load JS at the end of body so the page loads first -->
+  <script src="js/data.js"></script>
+  <script src="js/reserve.js"></script>
+</body>
+</html>
