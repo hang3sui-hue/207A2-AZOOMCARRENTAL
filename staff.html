@@ -69,6 +69,27 @@
   </div>
 </section>
 
+<section class="staff-section">
+  <h2 class="section-title">Fleet Status</h2>
+  <p class="section-intro">Cars marked "Needs repair" or "Needs cleaning" after an inspection cannot be booked until they are marked ready.</p>
+  <div class="table-box">
+    <table class="booking-table">
+      <thead>
+        <tr>
+          <th>Car</th>
+          <th>Type</th>
+          <th>Branch</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="fleet-table-body">
+        <!-- the rows are added here by js/staff.js -->
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <section id="inspection" class="staff-section inspection-section">
   <h2 class="section-title">Inspect Returned Car</h2>
   <form id="inspection-form" class="inspection-form">
@@ -141,7 +162,7 @@
       <textarea id="inspect-notes" class="form-input" rows="3" placeholder="Small scratch on the rear left door."></textarea>
     </div>
     <div class="form-row">
-      <label for="inspect-photos" class="form-label">Photos of damage</label>
+      <label for="inspect-photos" class="form-label">Photos of damage (up to 3)</label>
       <input type="file" id="inspect-photos" class="form-input" accept="image/*" multiple>
     </div>
     <div class="form-row">

@@ -35,8 +35,13 @@ function makeCarCard(car) {
   let badge = `<span class="badge badge-available">Available</span>`;
   let button = `<a href="reserve.html?car=${car.id}" class="btn">Reserve</a>`;
 
-  if (car.available === false) {
-    badge = `<span class="badge badge-booked">Booked</span>`;
+  // not in service, or marked "repair" / "cleaning" by staff after an inspection
+  if (canBeRented(car) === false) {
+    let label = "Booked";
+    if (car.available === true) {
+      label = "In Service";
+    }
+    badge = `<span class="badge badge-booked">${label}</span>`;
     button = `<span class="btn btn-disabled">Not Available</span>`;
   }
 

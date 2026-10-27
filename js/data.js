@@ -252,13 +252,132 @@ function getAllUsers() {
   return users.concat(newUsers);
 }
 
+// make text safe before putting it into innerHTML
+// (so a name like <img onerror=...> shows as text and does not run as code)
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// ===== Dates =====
+// Dates are kept as "YYYY-MM-DD" text in the LOCAL time zone (Singapore),
+// not with toISOString(), which gives the UTC date and can be one day behind.
+
+// Date object -> "2026-11-02"
+function toDateText(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + day;
+}
+
+// "2026-11-02" -> Date object at local midnight
+function parseDate(text) {
+  const parts = text.split("-");
+  return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+}
+
+// today's date as "YYYY-MM-DD"
+function todayText() {
+  return toDateText(new Date());
+}
+
+// "2026-11-02" + 3 days -> "2026-11-05"
+function addDays(text, days) {
+  const date = parseDate(text);
+  date.setDate(date.getDate() + days);
+  return toDateText(date);
+}
+
+// how many days a rental lasts
+function rentalDays(period, duration) {
+  if (period === "week") {
+    return duration * 7;
+  }
+  if (period === "month") {
+    return duration * 30;
+  }
+  return duration;
+}
+
+// the day the car should come back
+function getReturnDate(booking) {
+  return addDays(booking.pickupDate, rentalDays(booking.period, booking.duration));
+}
+
 // "2026-11-02" -> "2 Nov 2026"
 function formatDate(text) {
-  if (text === "") {
+  if (text === "" || text === undefined) {
     return "-";
   }
-  const date = new Date(text);
-  return date.toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" });
+  return parseDate(text).toLocaleDateString("en-SG", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// ===== Car availability =====
+// After an inspection, staff can mark a car "repair" or "cleaning".
+// Those cars cannot be booked until staff mark them ready again.
+
+function getCarStatuses() {
+  const saved = localStorage.getItem("azoomCarStatus");
+  if (saved === null) {
+    return {};
+  }
+  return JSON.parse(saved);
+}
+
+function setCarStatus(carId, status) {
+  const statuses = getCarStatuses();
+  if (status === "available") {
+    delete statuses[carId];
+  } else {
+    statuses[carId] = status;
+  }
+  localStorage.setItem("azoomCarStatus", JSON.stringify(statuses));
+}
+
+// "available", "repair" or "cleaning"
+function getCarStatus(carId) {
+  const status = getCarStatuses()[carId];
+  if (status === undefined) {
+    return "available";
+  }
+  return status;
+}
+
+// can this car be offered to customers at all?
+function canBeRented(car) {
+  return car.available === true && getCarStatus(car.id) === "available";
+}
+
+// find a booking that already uses this car between start and end (or null)
+// - reserved: blocks its own dates
+// - picked / returned: the car is not back or not checked yet, so it is busy until at least tomorrow
+function findClash(carId, start, end) {
+  const tomorrow = addDays(todayText(), 1);
+
+  for (const booking of getBookings()) {
+    if (booking.carId !== Number(carId)) {
+      continue;
+    }
+    if (booking.status !== "reserved" && booking.status !== "picked" && booking.status !== "returned") {
+      continue;
+    }
+
+    let busyUntil = getReturnDate(booking);
+    if (booking.status !== "reserved" && busyUntil < tomorrow) {
+      busyUntil = tomorrow;
+    }
+
+    // two date ranges overlap when each one starts before the other one ends
+    if (start < busyUntil && booking.pickupDate < end) {
+      return booking;
+    }
+  }
+  return null;
 }
 
 // 3, "day" -> "3 days"

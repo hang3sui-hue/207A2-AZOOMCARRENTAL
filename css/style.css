@@ -1,24 +1,22 @@
 /* ===== AZoom Car Rental - Stylesheet (Black & silver, with a touch of electric green) ===== */
 
 /* ---------- 1. Colour variables ---------- */
+
 :root {
-  --black: #000000;          /* page background - pure black like a showroom */
-  --black-2: #111111;        /* cards */
-  --green: #0d1a15;          /* very dark green band (almost black) */
-  --green-2: #15261f;        /* band hover */
-  --accent: #2ee59d;         /* electric green - used only for small details */
-  --accent-2: #6ff0bd;
-  --orange: #d6d6d6;         /* silver - main buttons and fine details */
-  --orange-2: #ffffff;
-  --text: #e6e6e6;           /* light silver text */
-  --muted: #8c8c8c;          /* grey text */
-  --line: rgba(255, 255, 255, 0.1);   /* very thin neutral lines */
-  /* fonts already installed on the computer - nothing is downloaded */
-  --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, "Times New Roman", serif;
-  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --black: #000000;
+  --black-2: #111111;
+  --green: #0d1a15;  /* page background - pure black like a showroom */
+  --accent: #2ee59d;  /* very dark green band (almost black) */
+  --silver: #d6d6d6;  /* silver - main buttons and fine details */
+  --text: #e6e6e6;  /* silver - main buttons and fine details */
+  --muted: #8c8c8c;
+  --line: rgba(255, 255, 255, 0.1);  /* light silver text */
+  --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, "Times New Roman", serif;  /* grey text */
+  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;  /* fonts already installed on the computer - nothing is downloaded */
 }
 
 /* ---------- 2. Base page ---------- */
+
 body {
   font-family: var(--sans);
   font-weight: 300;
@@ -28,16 +26,20 @@ body {
   line-height: 1.8;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--serif);
-  font-weight: 500;
   line-height: 1.15;
-  letter-spacing: 0.02em;
   color: var(--text);
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 /* ---------- 3. Header and navigation ---------- */
+
 /* sticky header: the navigation bar stays at the top when you scroll */
+
 header {
   position: sticky;
   top: 0;
@@ -46,9 +48,9 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 22px 56px;
-  background-color: rgba(8, 9, 10, 0.92);
-  backdrop-filter: blur(10px);              /* frosted glass effect */
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
+  background-color: rgba(0, 0, 0, 0.8);  /* frosted glass effect */
 }
 
 .logo {
@@ -56,8 +58,8 @@ header {
   font-size: 1.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: var(--accent);
   text-decoration: none;
+  color: var(--text);
 }
 
 nav ul {
@@ -80,20 +82,21 @@ nav a {
   transition: color 0.3s;
 }
 
-/* thin orange line that grows under the link */
+/* thin line that grows under the link */
+
 nav a::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
   width: 0;
-  height: 2px;
-  background-color: var(--orange);
   transition: width 0.4s ease;
+  height: 1px;
+  background-color: var(--text);
 }
 
 nav a:hover {
-  color: var(--accent);
+  color: #ffffff;
 }
 
 nav a:hover::after,
@@ -102,11 +105,13 @@ nav a.active::after {
 }
 
 /* the page you are on now */
+
 nav a.active {
-  color: var(--accent);
+  color: #ffffff;
 }
 
 /* ---------- 4. Buttons ---------- */
+
 .btn,
 .ViewCars {
   display: inline-block;
@@ -120,91 +125,96 @@ nav a.active {
   transition: all 0.4s ease;
 }
 
-/* main button: speed orange, turns electric green on hover */
+/* main button: solid silver, turns white on hover */
+
 .btn {
-  background-color: var(--orange);
-  color: var(--black);
-  border: 1px solid var(--orange);
+  border: 1px solid var(--silver);
+  background-color: var(--silver);
+  border-color: var(--silver);
+  color: #000000;
 }
 
 .btn:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: var(--black);
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
 }
 
-/* second button: thin green outline */
+/* second button: thin outline */
+
 .ViewCars {
   background-color: transparent;
-  color: var(--accent);
   border: 1px solid var(--accent);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .ViewCars:hover {
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: transparent;
+  border-color: var(--text);
+  color: #ffffff;
 }
 
 /* ---------- 5. Hero (big banner) ---------- */
+
 .hero {
   text-align: left;
-  padding: 140px 8% 120px;
-  min-height: 520px;
-  /* the photo, with a black fade on the left so the text is easy to read */
-  background:
-    linear-gradient(90deg, rgba(8, 9, 10, 0.97) 0%, rgba(8, 9, 10, 0.85) 38%, rgba(8, 9, 10, 0.1) 75%),
-    url("../images/hero.jpg") center right / cover no-repeat,
-    radial-gradient(ellipse at 80% 30%, rgba(46, 229, 157, 0.18), transparent 60%),
-    var(--black);
-  border-bottom: 1px solid var(--line);
+  min-height: 88vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0 6% 80px;
+  border-bottom: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 70%), linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.4) 35%, rgba(0, 0, 0, 0) 65%), url("../images/hero.jpg") center / cover no-repeat, var(--black);
 }
 
 .hero h1 {
-  font-size: 4.2rem;
   margin: 0 0 28px;
   animation: fadeUp 1.2s ease-out;
+  font-size: 4.6rem;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
 }
 
-/* small orange and green line under the title */
-.hero h1::after {
-  content: "";
-  display: block;
-  width: 90px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--orange) 0 40%, var(--accent) 40% 100%);
-  margin: 28px 0 0;
+.hero-points li + li::before {
+  content: "/ ";
+  color: #555555;
 }
+
 
 .hero p {
-  max-width: 520px;
   margin: 0 0 16px;
-  color: var(--muted);
   font-size: 1rem;
   animation: fadeUp 1.2s ease-out 0.2s both;
+  color: #bdbdbd;
+  max-width: 560px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
 }
 
 .hero-points {
   list-style: none;
   padding: 0;
-  margin: 36px 0 30px;
   max-width: 560px;
   display: flex;
   flex-wrap: wrap;
   gap: 14px 34px;
   animation: fadeUp 1.2s ease-out 0.4s both;
+  margin: 18px 0 20px;
 }
 
 .hero-points li {
   font-size: 0.72rem;
-  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #bdbdbd;
+  letter-spacing: 0.15em;
 }
 
 .hero-points li::before {
-  content: "◆ ";
-  color: var(--orange);
+  color: var(--silver);
   font-size: 0.6rem;
+  content: "";
 }
 
 .hero .btn,
@@ -214,27 +224,27 @@ nav a.active {
 
 @keyframes fadeUp {
   from {
-    opacity: 0;
-    transform: translateY(24px);
+  opacity: 0;
+  transform: translateY(24px);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
   }
 }
 
-/* ---------- 6. How it works (5 steps) - green band ---------- */
+/* ---------- 6. How it works (5 steps) ---------- */
+
 .how-it-works {
-  background-color: var(--green);
-  /* full width band, content stays max 1200px in the middle */
   padding: 110px max(24px, calc((100% - 1200px) / 2));
-  text-align: center;
+  text-align: center;  /* full width band, content stays max 1200px in the middle */
+  background-color: var(--black-2);
 }
 
 .how-title,
 .fleet-title,
 .branches-title {
-  font-size: 2.8rem;
+  font-size: 3rem;
   margin: 0 0 60px;
 }
 
@@ -246,12 +256,16 @@ nav a.active {
   grid-template-columns: repeat(5, 1fr);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  border: none;
+  gap: 40px;
 }
 
 .step {
-  padding: 44px 22px;
   border-right: 1px solid var(--line);
   transition: background-color 0.4s;
+  border: none;
+  padding: 10px 0;
+  text-align: left;
 }
 
 .step:last-child {
@@ -259,14 +273,15 @@ nav a.active {
 }
 
 .step:hover {
-  background-color: var(--green-2);
+  background-color: transparent;
 }
 
 .step-number {
-  font-family: var(--serif);
-  font-size: 2.8rem;
-  font-style: italic;
+  font-style: normal;
+  font-size: 1rem;
+  font-family: var(--sans);
   color: var(--accent);
+  letter-spacing: 0.2em;
 }
 
 .step-name {
@@ -276,11 +291,16 @@ nav a.active {
 
 .step-text {
   margin: 0;
-  color: #a9bdb3;
   font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.step-number::before {
+  content: "0";
 }
 
 /* ---------- 7. Fleet (car photos) ---------- */
+
 .fleet {
   max-width: 1200px;
   margin: 0 auto;
@@ -305,37 +325,37 @@ nav a.active {
 }
 
 .fleet-card {
-  background-color: var(--black-2);
-  border: 1px solid transparent;
   overflow: hidden;
   transition: border-color 0.4s, transform 0.4s;
+  background-color: transparent;
+  border: none;
 }
 
 .fleet-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-6px);
+  transform: none;
+  border-color: transparent;
 }
 
 .fleet-img {
   display: block;
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;                 /* fill the box without stretching */
-  background-color: var(--green);    /* shows while the photo loads */
-  transition: transform 0.6s;
+  object-fit: cover;
+  background-color: var(--green);
+  transition: transform 0.6s;  /* fill the box without stretching */
 }
 
 .fleet-card:hover .fleet-img {
-  transform: scale(1.05);            /* small zoom on hover */
+  transform: scale(1.05);
 }
 
 .fleet-name {
   font-size: 1.5rem;
-  margin: 20px 20px 6px;
+  margin: 20px 0 6px;
 }
 
 .fleet-type {
-  margin: 0 20px;
+  margin: 0;
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -343,18 +363,19 @@ nav a.active {
 }
 
 .fleet-price {
-  margin: 10px 20px 22px;
+  margin: 10px 0 22px;
   font-size: 0.85rem;
   color: var(--muted);
 }
 
 .price {
-  font-family: var(--serif);
-  font-size: 1.6rem;
-  color: var(--accent);
+  font-family: var(--sans);
+  font-size: 1.3rem;
+  color: var(--text);
 }
 
 /* ---------- 8. Branches ---------- */
+
 .branches {
   max-width: 1200px;
   margin: 0 auto;
@@ -365,6 +386,7 @@ nav a.active {
 }
 
 /* title, intro and photo go across both columns */
+
 .branches-title,
 .branches-intro,
 .branches-img {
@@ -390,27 +412,27 @@ nav a.active {
 }
 
 .branch {
-  background-color: var(--black-2);
-  padding: 48px 44px;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--orange);
   transition: border-color 0.4s, transform 0.4s;
+  border: none;
+  border-top: 1px solid var(--line);
+  background-color: transparent;
+  padding: 30px 0 0;
 }
 
 .branch:hover {
   border-color: var(--accent);
-  border-top-color: var(--orange);
-  transform: translateY(-4px);
+  border-top-color: var(--silver);
+  transform: none;
 }
 
 .branch-name {
   margin: 0 0 24px;
   font-size: 1.8rem;
-  color: var(--accent);
+  color: var(--text);
 }
 
 .branch-address {
-  font-style: normal;               /* <address> is italic by default */
+  font-style: normal;
 }
 
 .branch-address,
@@ -423,18 +445,19 @@ nav a.active {
 
 .phone-link,
 .email-link {
-  color: var(--accent);
+  color: var(--text);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
   transition: border-color 0.3s;
 }
 
 .phone-link:hover,
 .email-link:hover {
-  border-color: var(--orange);
+  border-color: var(--silver);
 }
 
 /* ---------- 9. Footer ---------- */
+
 .footer {
   background-color: #050606;
   border-top: 1px solid var(--line);
@@ -458,101 +481,22 @@ nav a.active {
   margin-top: 18px !important;
 }
 
-/* ---------- 10. Tablet (screen 1024px or smaller) ---------- */
-@media (max-width: 1024px) {
-  .fleet-list {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .steps {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .step {
-    border-bottom: 1px solid var(--line);
-  }
-}
-
-/* ---------- 11. Mobile (screen 768px or smaller) ---------- */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    gap: 14px;
-    padding: 16px;
-  }
-
-  nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px 20px;
-  }
-
-  .hero {
-    padding: 90px 18px 80px;
-    min-height: auto;
-    background:
-      linear-gradient(180deg, rgba(8, 9, 10, 0.9), rgba(8, 9, 10, 0.75)),
-      url("../images/hero.jpg") center / cover no-repeat,
-      var(--black);
-  }
-
-  .hero h1 {
-    font-size: 2.6rem;
-  }
-
-  .how-title,
-  .fleet-title,
-  .branches-title {
-    font-size: 2rem;
-  }
-
-  .steps {
-    grid-template-columns: 1fr;
-  }
-
-  .step {
-    border-right: none;
-  }
-
-  .branches {
-    grid-template-columns: 1fr;
-  }
-
-  .branches-img {
-    height: 220px;
-  }
-
-  .branch {
-    padding: 34px 26px;
-  }
-}
-
 /* =====================================================
    Inner pages (cars, reserve, bookings, login, staff)
    ===================================================== */
 
-/* ---------- 12. Page title area ---------- */
+/* ---------- 10. Page title area ---------- */
+
 .page-hero {
   padding: 100px max(24px, calc((100% - 1200px) / 2)) 60px;
-  background:
-    radial-gradient(ellipse at 85% 0%, rgba(46, 229, 157, 0.16), transparent 60%),
-    var(--black);
+  background: var(--black);
   border-bottom: 1px solid var(--line);
 }
 
 .page-title {
-  font-size: 3.6rem;
   margin: 0 0 18px;
   animation: fadeUp 1s ease-out;
-}
-
-.page-title::after {
-  content: "";
-  display: block;
-  width: 90px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--orange) 0 40%, var(--accent) 40% 100%);
-  margin-top: 24px;
+  font-size: 4rem;
 }
 
 .page-intro {
@@ -562,7 +506,8 @@ nav a.active {
   animation: fadeUp 1s ease-out 0.2s both;
 }
 
-/* ---------- 13. Filter bar ---------- */
+/* ---------- 11. Filter bar ---------- */
+
 .filters {
   max-width: 1200px;
   margin: 0 auto;
@@ -583,7 +528,7 @@ nav a.active {
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .filter-select {
@@ -612,7 +557,8 @@ nav a.active {
   color: var(--muted);
 }
 
-/* ---------- 14. Car cards (re-use the fleet card look) ---------- */
+/* ---------- 12. Car cards (re-use the fleet card look) ---------- */
+
 .car-section {
   max-width: 1200px;
   margin: 0 auto;
@@ -632,7 +578,7 @@ nav a.active {
 }
 
 .car-img-box {
-  position: relative;                 /* so the badge can sit on the photo */
+  position: relative;
   overflow: hidden;
 }
 
@@ -648,25 +594,25 @@ nav a.active {
 }
 
 .badge-available {
-  background-color: var(--accent);
-  color: var(--black);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: var(--accent);
 }
 
 .badge-booked {
   background-color: var(--black);
-  color: var(--orange);
-  border: 1px solid var(--orange);
+  color: var(--silver);
+  border: 1px solid var(--silver);
 }
 
 .car-branch {
-  margin: 6px 20px 0;
+  margin: 6px 0 0;
   font-size: 0.8rem;
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .car-prices {
   list-style: none;
-  margin: 14px 20px 0;
+  margin: 14px 0 0;
   padding: 14px 0 0;
   border-top: 1px solid var(--line);
   display: flex;
@@ -683,7 +629,7 @@ nav a.active {
 }
 
 .car-action {
-  margin: auto 20px 22px;             /* push the button to the bottom of the card */
+  margin: auto 0 22px;
   padding-top: 18px;
 }
 
@@ -709,36 +655,8 @@ nav a.active {
   color: var(--muted);
 }
 
-@media (max-width: 1024px) {
-  .car-list {
-    grid-template-columns: 1fr 1fr;
-  }
-}
+/* ---------- 13. Forms (shared by reserve, login, bookings, staff) ---------- */
 
-@media (max-width: 768px) {
-  .page-hero {
-    padding: 70px 18px 40px;
-  }
-
-  .page-title {
-    font-size: 2.4rem;
-  }
-
-  .filter-item,
-  .filter-select {
-    width: 100%;
-  }
-
-  .result-count {
-    margin-left: 0;
-  }
-
-  .car-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ---------- 15. Forms (shared by reserve, login, bookings, staff) ---------- */
 .form-row {
   display: flex;
   flex-direction: column;
@@ -773,19 +691,26 @@ nav a.active {
   border-color: rgba(46, 229, 157, 0.5);
 }
 
+.form-success {
+  color: var(--accent);
+}
+
 /* green glow when the user is typing in a box */
+
 .form-input:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(46, 229, 157, 0.15);
 }
 
-/* red-orange border when the value is wrong (after the user typed something) */
+/* silver border when the value is wrong (after the user typed something) */
+
 .form-input:user-invalid {
-  border-color: var(--orange);
+  border-color: var(--silver);
 }
 
 /* make the date picker icon visible on a dark background */
+
 .form-input::-webkit-calendar-picker-indicator {
   filter: invert(0.8);
   cursor: pointer;
@@ -806,14 +731,14 @@ textarea.form-input {
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .form-error {
   min-height: 1.2em;
   margin: 0 0 10px;
   font-size: 0.85rem;
-  color: var(--orange);
+  color: var(--silver);
 }
 
 .form-submit {
@@ -824,6 +749,7 @@ textarea.form-input {
 }
 
 /* radio buttons that look like buttons (Daily / Weekly / Monthly) */
+
 .radio-group,
 .role-switch {
   display: flex;
@@ -840,7 +766,7 @@ textarea.form-input {
 .radio-input,
 .role-input {
   position: absolute;
-  opacity: 0;                        /* hide the real round button */
+  opacity: 0;
 }
 
 .radio-text,
@@ -861,19 +787,21 @@ textarea.form-input {
 }
 
 /* the chosen option */
+
 .radio-input:checked + .radio-text,
 .role-input:checked + .role-text {
-  background-color: var(--accent);
-  color: var(--black);
   font-weight: 600;
+  background-color: var(--text);
+  color: #000000;
 }
 
 .radio-input:focus-visible + .radio-text,
 .role-input:focus-visible + .role-text {
-  outline: 2px solid var(--orange);
+  outline: 2px solid var(--silver);
 }
 
 /* checkbox with text */
+
 .check-option {
   display: flex;
   align-items: flex-start;
@@ -887,20 +815,21 @@ textarea.form-input {
   width: 18px;
   height: 18px;
   margin: 3px 0 0;
-  accent-color: var(--accent);       /* green tick */
+  accent-color: var(--accent);
   flex-shrink: 0;
-  cursor: pointer;
+  cursor: pointer;  /* green tick */
 }
 
-/* ---------- 16. Reserve page ---------- */
+/* ---------- 14. Reserve page ---------- */
+
 .reserve-section {
   max-width: 1200px;
   margin: 0 auto;
   padding: 60px 24px 120px;
   display: grid;
-  grid-template-columns: 1fr 380px;   /* form on the left, summary on the right */
+  grid-template-columns: 1fr 380px;
   gap: 40px;
-  align-items: start;
+  align-items: start;  /* form on the left, summary on the right */
 }
 
 .form-block {
@@ -920,17 +849,17 @@ textarea.form-input {
 
 .form-step {
   font-style: italic;
-  color: var(--accent);
+  color: var(--muted);
   margin-right: 8px;
 }
 
 .summary {
   position: sticky;
-  top: 110px;                        /* stays on screen while the form scrolls */
+  top: 110px;
   padding: 30px;
-  background-color: var(--green);
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--orange);
+  border: 1px solid var(--line);  /* stays on screen while the form scrolls */
+  background-color: var(--black-2);
+  border-top: 1px solid var(--line);
 }
 
 .summary-title {
@@ -982,7 +911,7 @@ textarea.form-input {
 .summary-total dd {
   font-family: var(--serif);
   font-size: 1.8rem;
-  color: var(--accent);
+  color: var(--text);
 }
 
 .summary-note {
@@ -992,6 +921,7 @@ textarea.form-input {
 }
 
 /* pop-up window (dialog) */
+
 .modal {
   max-width: 460px;
   padding: 40px;
@@ -1036,7 +966,8 @@ textarea.form-input {
   font-family: var(--sans);
 }
 
-/* ---------- 17. My Bookings page ---------- */
+/* ---------- 15. My Bookings page ---------- */
+
 .user-line {
   margin: 20px 0 0;
   font-size: 0.8rem;
@@ -1061,8 +992,8 @@ textarea.form-input {
   padding: 34px;
   background-color: var(--black-2);
   border: 1px solid var(--line);
-  border-left: 3px solid var(--accent);
   animation: fadeUp 0.6s ease-out both;
+  border-left: 1px solid var(--line);
 }
 
 .booking-done {
@@ -1093,7 +1024,44 @@ textarea.form-input {
   font-size: 1.9rem;
 }
 
+.status-cancelled {
+  color: #6a6a6a;
+}
+
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.booking-card .btn {
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.return-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.bill-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.bill-photo {
+  display: block;
+  width: 120px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
 /* coloured status labels */
+
 .status {
   display: inline-block;
   padding: 4px 12px;
@@ -1117,7 +1085,7 @@ textarea.form-input {
 }
 
 .status-bill {
-  color: var(--orange);
+  color: var(--silver);
 }
 
 .status-paid {
@@ -1125,6 +1093,7 @@ textarea.form-input {
 }
 
 /* progress line: Reserved > Picked Up > Returned > Inspected > Paid */
+
 .tracker {
   list-style: none;
   display: flex;
@@ -1144,6 +1113,7 @@ textarea.form-input {
 }
 
 /* the dot */
+
 .track-step::before {
   content: "";
   position: absolute;
@@ -1159,6 +1129,7 @@ textarea.form-input {
 }
 
 /* the line between dots */
+
 .track-step::after {
   content: "";
   position: absolute;
@@ -1188,12 +1159,12 @@ textarea.form-input {
 }
 
 .track-step.current {
-  color: var(--orange);
+  color: var(--silver);
   font-weight: 600;
 }
 
 .track-step.current::before {
-  border-color: var(--orange);
+  border-color: var(--silver);
   box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.2);
 }
 
@@ -1240,11 +1211,12 @@ textarea.form-input {
 }
 
 .return-form .form-input {
-  margin: 8px 0 16px;
   max-width: 420px;
+  margin: 8px 0 16px;
 }
 
 /* final bill */
+
 .bill {
   border-top: 1px solid var(--line);
   padding-top: 20px;
@@ -1284,7 +1256,7 @@ textarea.form-input {
 
 .bill-total .bill-amount {
   font-size: 1.8rem;
-  color: var(--orange);
+  color: var(--silver);
 }
 
 .bill-refund td {
@@ -1298,7 +1270,8 @@ textarea.form-input {
   color: var(--muted);
 }
 
-/* ---------- 18. Login page ---------- */
+/* ---------- 16. Login page ---------- */
+
 .login-section {
   min-height: 70vh;
   padding: 90px 24px 120px;
@@ -1307,9 +1280,7 @@ textarea.form-input {
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(46, 229, 157, 0.14), transparent 60%),
-    var(--black);
+  background: var(--black);
 }
 
 .login-card {
@@ -1318,12 +1289,11 @@ textarea.form-input {
   padding: 46px 40px;
   background-color: var(--black-2);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--accent);
+  border-top: 1px solid var(--line);
   animation: fadeUp 0.8s ease-out both;
 }
 
 .register-card {
-  border-top-color: var(--orange);
   animation-delay: 0.15s;
 }
 
@@ -1353,7 +1323,7 @@ textarea.form-input {
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--muted);
 }
 
 .demo-line {
@@ -1370,17 +1340,18 @@ textarea.form-input {
 
 .text-link,
 .staff-link {
-  color: var(--accent);
+  color: var(--text);
   text-decoration: none;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .text-link:hover,
 .staff-link:hover {
-  border-color: var(--orange);
+  border-color: var(--silver);
 }
 
-/* ---------- 19. Staff page ---------- */
+/* ---------- 17. Staff page ---------- */
+
 .stats {
   max-width: 1200px;
   margin: 0 auto;
@@ -1397,7 +1368,7 @@ textarea.form-input {
 }
 
 .stat-alert {
-  border-color: var(--orange);
+  border-color: var(--silver);
 }
 
 .stat-number {
@@ -1405,11 +1376,11 @@ textarea.form-input {
   font-family: var(--serif);
   font-size: 3rem;
   line-height: 1;
-  color: var(--accent);
+  color: var(--text);
 }
 
 .stat-alert .stat-number {
-  color: var(--orange);
+  color: var(--silver);
 }
 
 .stat-label {
@@ -1431,12 +1402,12 @@ textarea.form-input {
 }
 
 .section-title {
-  font-size: 2.2rem;
+  font-size: 3rem;
   margin: 0 0 24px;
 }
 
 .table-box {
-  overflow-x: auto;                  /* table can scroll sideways on phones */
+  overflow-x: auto;
   border: 1px solid var(--line);
 }
 
@@ -1494,8 +1465,8 @@ textarea.form-input {
 
 .table-btn-main {
   color: var(--black);
-  background-color: var(--orange);
-  border-color: var(--orange);
+  background-color: var(--silver);
+  border-color: var(--silver);
 }
 
 .table-btn-main:hover {
@@ -1512,7 +1483,7 @@ textarea.form-input {
   padding: 36px;
   background-color: var(--black-2);
   border: 1px solid var(--line);
-  border-top: 3px solid var(--orange);
+  border-top: 1px solid var(--line);
 }
 
 .damage-list {
@@ -1556,7 +1527,7 @@ textarea.form-input {
 .damage-fee {
   font-family: var(--serif);
   font-size: 1.1rem;
-  color: var(--orange);
+  color: var(--silver);
 }
 
 .late-input {
@@ -1584,10 +1555,39 @@ textarea.form-input {
   margin-top: 14px !important;
 }
 
-/* ---------- 20. Inner pages on tablet and mobile ---------- */
+.section-intro {
+  margin: -12px 0 20px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.table-sub {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* ---------- 18. Responsive: tablet (1024px or less) and mobile (768px or less) ---------- */
+
 @media (max-width: 1024px) {
+  .fleet-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .steps {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .step {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .car-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .reserve-section {
-    grid-template-columns: 1fr;       /* summary goes under the form */
+    grid-template-columns: 1fr;
   }
 
   .summary {
@@ -1600,6 +1600,76 @@ textarea.form-input {
 }
 
 @media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 20px;
+  }
+
+  .hero {
+    min-height: 80vh;
+    padding: 0 18px 60px;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0.1) 75%), url("../images/hero.jpg") center / cover no-repeat, var(--black);
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  .how-title,
+  .fleet-title,
+  .branches-title {
+    font-size: 2rem;
+  }
+
+  .steps {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .step {
+    border-right: none;
+  }
+
+  .branches {
+    grid-template-columns: 1fr;
+  }
+
+  .branches-img {
+    height: 220px;
+  }
+
+  .branch {
+    padding: 34px 26px;
+  }
+
+  .page-hero {
+    padding: 70px 18px 40px;
+  }
+
+  .page-title {
+    font-size: 2.4rem;
+  }
+
+  .filter-item,
+  .filter-select {
+    width: 100%;
+  }
+
+  .result-count {
+    margin-left: 0;
+  }
+
+  .car-list {
+    grid-template-columns: 1fr;
+  }
+
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -1636,324 +1706,4 @@ textarea.form-input {
   .stat-number {
     font-size: 2.2rem;
   }
-}
-
-/* =====================================================
-   22. REFINED LOOK - fewer colours, fewer lines, bigger photos
-   (inspired by premium car brand websites)
-   ===================================================== */
-
-h1, h2, h3 {
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-/* hero: full screen photo, title at the bottom left */
-.hero {
-  min-height: 88vh;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 0 6% 80px;
-  background:
-    linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.55) 35%, rgba(0, 0, 0, 0) 65%),
-    url("../images/hero.jpg") center / cover no-repeat,
-    var(--black);
-  border-bottom: none;
-}
-
-.hero h1 {
-  font-size: 4.6rem;
-  margin-bottom: 18px;
-}
-
-/* remove the decorative lines and diamonds */
-.hero h1::after,
-.page-title::after {
-  display: none;
-}
-
-.hero p {
-  color: #bdbdbd;
-  max-width: 560px;
-}
-
-.hero-points {
-  margin: 18px 0 20px;
-}
-
-.hero-points li {
-  color: #bdbdbd;
-  letter-spacing: 0.15em;
-}
-
-.hero-points li::before {
-  content: "";
-}
-
-.hero-points li + li::before {
-  content: "/  ";
-  color: #555555;
-}
-
-/* buttons: silver solid and thin silver outline, no colour */
-.btn {
-  background-color: var(--orange);
-  border-color: var(--orange);
-  color: #000000;
-}
-
-.btn:hover {
-  background-color: #ffffff;
-  border-color: #ffffff;
-  color: #000000;
-}
-
-.ViewCars {
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.ViewCars:hover {
-  background-color: transparent;
-  border-color: var(--text);
-  color: #ffffff;
-}
-
-/* navigation: silver, thin underline */
-.logo {
-  color: var(--text);
-}
-
-nav a.active,
-nav a:hover {
-  color: #ffffff;
-}
-
-nav a::after {
-  height: 1px;
-  background-color: var(--text);
-}
-
-header {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-/* section titles bigger and calmer */
-.how-title,
-.fleet-title,
-.branches-title,
-.section-title {
-  font-size: 3rem;
-}
-
-/* steps: no box lines, just numbers and text */
-.how-it-works {
-  background-color: var(--black-2);
-}
-
-.steps {
-  border: none;
-  gap: 40px;
-}
-
-.step {
-  border: none;
-  padding: 10px 0;
-  text-align: left;
-}
-
-.step:hover {
-  background-color: transparent;
-}
-
-.step-number {
-  font-style: normal;
-  font-size: 1rem;
-  font-family: var(--sans);
-  color: var(--accent);
-  letter-spacing: 0.2em;
-}
-
-.step-number::before {
-  content: "0";
-}
-
-.step-text {
-  color: var(--muted);
-}
-
-/* fleet: photo first, no card box */
-.fleet-card {
-  background-color: transparent;
-  border: none;
-}
-
-.fleet-card:hover {
-  transform: none;
-  border-color: transparent;
-}
-
-.fleet-name,
-.fleet-type,
-.fleet-price,
-.car-branch,
-.car-prices,
-.car-action {
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.price {
-  font-family: var(--sans);
-  font-size: 1.3rem;
-  color: var(--text);
-}
-
-.car-branch {
-  color: var(--muted);
-}
-
-/* branches: no boxes, a thin line on top */
-.branch {
-  border: none;
-  border-top: 1px solid var(--line);
-  background-color: transparent;
-  padding: 30px 0 0;
-}
-
-.branch:hover {
-  transform: none;
-}
-
-.branch-name {
-  color: var(--text);
-}
-
-.phone-link,
-.email-link,
-.text-link,
-.staff-link {
-  color: var(--text);
-  border-bottom-color: rgba(255, 255, 255, 0.3);
-}
-
-/* inner pages: plain black title area */
-.page-hero {
-  background: var(--black);
-  border-bottom: 1px solid var(--line);
-}
-
-.page-title {
-  font-size: 4rem;
-}
-
-/* forms and panels: calm grey borders */
-.summary {
-  background-color: var(--black-2);
-  border-top: 1px solid var(--line);
-}
-
-.summary-total dd,
-.stat-number {
-  color: var(--text);
-}
-
-.booking-card {
-  border-left: 1px solid var(--line);
-}
-
-.login-card,
-.register-card,
-.inspection-form {
-  border-top: 1px solid var(--line);
-}
-
-.login-section {
-  background: var(--black);
-}
-
-.form-legend .form-step,
-.card-types,
-.filter-label,
-.demo-title {
-  color: var(--muted);
-}
-
-.radio-input:checked + .radio-text,
-.role-input:checked + .role-text {
-  background-color: var(--text);
-  color: #000000;
-}
-
-.badge-available {
-  background-color: rgba(0, 0, 0, 0.7);
-  color: var(--accent);
-}
-
-@media (max-width: 768px) {
-  .hero {
-    min-height: 80vh;
-    padding: 0 18px 60px;
-    background:
-      linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0.1) 75%),
-      url("../images/hero.jpg") center / cover no-repeat,
-      var(--black);
-  }
-
-  .hero h1 {
-    font-size: 2.8rem;
-  }
-
-  .steps {
-    gap: 24px;
-  }
-}
-
-/* ---------- 23. Extra styles used by JavaScript ---------- */
-.form-success {
-  color: var(--accent);
-}
-
-.status-cancelled {
-  color: #6a6a6a;
-}
-
-.booking-list {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.booking-card .btn {
-  cursor: pointer;
-  font-family: var(--sans);
-}
-
-/* ---------- 24. Small fixes ---------- */
-/* hero: darker on the left too, so the title is easy to read on the bright photo */
-.hero {
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0) 70%),
-    linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.4) 35%, rgba(0, 0, 0, 0) 65%),
-    url("../images/hero.jpg") center / cover no-repeat,
-    var(--black);
-}
-
-.hero h1,
-.hero p {
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
-}
-
-/* return form: label above each box */
-.return-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.return-form .form-input {
-  margin: 8px 0 16px;
 }

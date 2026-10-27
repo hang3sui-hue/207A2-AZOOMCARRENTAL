@@ -42,7 +42,7 @@ function makeBill(booking) {
   let rows = `<tr><td>Rental: ${formatPeriod(booking.duration, booking.period)}</td><td class="bill-amount">$${booking.rental}</td></tr>`;
 
   for (const damage of booking.damages) {
-    rows += `<tr><td>${damage.name}</td><td class="bill-amount">$${damage.fee}</td></tr>`;
+    rows += `<tr><td>${escapeHTML(damage.name)}</td><td class="bill-amount">$${damage.fee}</td></tr>`;
   }
 
   rows += `<tr><td>Already paid: rental</td><td class="bill-amount bill-minus">- $${booking.rental}</td></tr>`;
@@ -60,7 +60,20 @@ function makeBill(booking) {
 
   let notes = "";
   if (booking.notes !== "") {
-    notes = `<p class="bill-note">Staff notes: ${booking.notes}</p>`;
+    notes = `<p class="bill-note">Staff notes: ${escapeHTML(booking.notes)}</p>`;
+  }
+
+  // photos of the damage taken by staff (saved as small images)
+  let photos = "";
+  if (Array.isArray(booking.photos) && booking.photos.length > 0) {
+    photos = `<div class="bill-photos">`;
+    for (const photo of booking.photos) {
+      // only show real image data, nothing else
+      if (String(photo).startsWith("data:image/")) {
+        photos += `<a href="${photo}" target="_blank"><img src="${photo}" alt="Photo of damage" class="bill-photo"></a>`;
+      }
+    }
+    photos += `</div>`;
   }
 
   return `
@@ -74,7 +87,8 @@ function makeBill(booking) {
         </tfoot>
       </table>
       ${notes}
-      <form class="pay-form" data-ref="${booking.ref}">
+      ${photos}
+      <form class="pay-form" data-ref="${escapeHTML(booking.ref)}">
         <label class="check-option">
           <input type="checkbox" class="check-input" checked required>
           <span class="check-text">Use the same credit card I used for the booking</span>
@@ -91,23 +105,23 @@ function makeActionPart(booking) {
     return `
       <div class="booking-actions">
         <p class="action-hint">Visit the branch with your licence. Our staff will hand you the keys.</p>
-        <button type="button" class="btn pickup-btn" data-ref="${booking.ref}">Pick Up Car at Office</button>
-        <button type="button" class="ViewCars cancel-btn" data-ref="${booking.ref}">Cancel Booking</button>
+        <button type="button" class="btn pickup-btn" data-ref="${escapeHTML(booking.ref)}">Pick Up Car at Office</button>
+        <button type="button" class="ViewCars cancel-btn" data-ref="${escapeHTML(booking.ref)}">Cancel Booking</button>
       </div>
     `;
   }
 
   if (booking.status === "picked") {
     return `
-      <form class="return-form" data-ref="${booking.ref}">
-        <label for="park-${booking.ref}" class="form-label">Where did you park the car?</label>
-        <select id="park-${booking.ref}" class="form-input return-park" required>
+      <form class="return-form" data-ref="${escapeHTML(booking.ref)}">
+        <label for="park-${escapeHTML(booking.ref)}" class="form-label">Where did you park the car?</label>
+        <select id="park-${escapeHTML(booking.ref)}" class="form-input return-park" required>
           <option value="">-- Choose a car park --</option>
           <option value="King Road Car Park">Level B1, King Road Car Park</option>
           <option value="Queen Road Car Park">Level 1, Queen Road Car Park</option>
         </select>
-        <label for="bay-${booking.ref}" class="form-label">Parking bay number</label>
-        <input type="text" id="bay-${booking.ref}" class="form-input return-bay" placeholder="B1-24" required>
+        <label for="bay-${escapeHTML(booking.ref)}" class="form-label">Parking bay number</label>
+        <input type="text" id="bay-${escapeHTML(booking.ref)}" class="form-input return-bay" placeholder="B1-24" required>
         <button type="submit" class="btn return-btn">Return Car</button>
       </form>
     `;
@@ -152,7 +166,7 @@ function makeBookingCard(booking) {
 
   let returnInfo = "";
   if (booking.returnCarpark !== "") {
-    returnInfo = `<div class="detail"><dt>Returned to</dt><dd>${booking.returnCarpark}, bay ${booking.bay}</dd></div>`;
+    returnInfo = `<div class="detail"><dt>Returned to</dt><dd>${escapeHTML(booking.returnCarpark)}, bay ${escapeHTML(booking.bay)}</dd></div>`;
   }
 
   return `
@@ -160,17 +174,17 @@ function makeBookingCard(booking) {
       <div class="booking-head">
         <img src="${car.image}" alt="${car.name}" class="booking-img">
         <div class="booking-info">
-          <p class="booking-ref">${booking.ref}</p>
+          <p class="booking-ref">${escapeHTML(booking.ref)}</p>
           <h2 class="booking-car">${car.name}</h2>
           <span class="status ${statusClass[booking.status]}">${statusText[booking.status]}</span>
         </div>
       </div>
       ${makeTracker(booking.status)}
       <dl class="booking-details">
-        <div class="detail"><dt>Pick-up branch</dt><dd>AZoom - ${booking.branch}</dd></div>
+        <div class="detail"><dt>Pick-up branch</dt><dd>AZoom - ${escapeHTML(booking.branch)}</dd></div>
         <div class="detail"><dt>Pick-up date</dt><dd>${formatDate(booking.pickupDate)}</dd></div>
         <div class="detail"><dt>Period</dt><dd>${formatPeriod(booking.duration, booking.period)}</dd></div>
-        <div class="detail"><dt>Return car park</dt><dd>${booking.carpark}</dd></div>
+        <div class="detail"><dt>Return car park</dt><dd>${escapeHTML(booking.carpark)}</dd></div>
         <div class="detail"><dt>Paid</dt><dd>$${booking.rental} + $${booking.deposit} deposit</dd></div>
         ${returnInfo}
       </dl>

@@ -1,7 +1,8 @@
 // ===== AZoom Car Rental - Staff Portal =====
 // 1. Show numbers and a table of all bookings
 // 2. Hand over the keys when a customer picks up a car
-// 3. Inspect a returned car, add damage fees, and create the final bill
+// 3. Inspect a returned car, add damage fees and photos, and create the final bill
+// 4. Keep cars that need repair or cleaning out of service until they are ready
 
 // ---------- 1. Get the HTML elements ----------
 const staffNameText = document.querySelector("#staff-name");
@@ -20,8 +21,10 @@ const photosInput = document.querySelector("#inspect-photos");
 const carStatusSelect = document.querySelector("#car-status");
 const extraAmountText = document.querySelector("#extra-amount");
 const inspectMessage = document.querySelector("#inspect-message");
+const fleetBody = document.querySelector("#fleet-table-body");
 
 const LATE_FEE_PER_DAY = 100;
+const MAX_PHOTOS = 3;
 
 // ---------- 2. Only staff can use this page ----------
 function checkStaff() {
@@ -55,14 +58,15 @@ function countStatus(list, status) {
 
 // ---------- 4. Show the 4 numbers at the top ----------
 function displayStats(list) {
+  // a car is free today when it can be rented and nobody is using it today
+  const today = todayText();
+  const tomorrow = addDays(today, 1);
   let availableCars = 0;
   for (const car of cars) {
-    if (car.available === true) {
+    if (canBeRented(car) && findClash(car.id, today, tomorrow) === null) {
       availableCars++;
     }
   }
-  // cars that are booked or on the road are not free
-  availableCars = availableCars - countStatus(list, "reserved") - countStatus(list, "picked");
 
   statNumbers[0].textContent = countStatus(list, "reserved");
   statNumbers[1].textContent = countStatus(list, "picked");
@@ -73,13 +77,13 @@ function displayStats(list) {
 // ---------- 5. What to show in the "Action" column ----------
 function makeAction(booking) {
   if (booking.status === "reserved") {
-    return `<button type="button" class="table-btn handover-btn" data-ref="${booking.ref}">Hand Over Keys</button>`;
+    return `<button type="button" class="table-btn handover-btn" data-ref="${escapeHTML(booking.ref)}">Hand Over Keys</button>`;
   }
   if (booking.status === "picked") {
     return `<span class="table-wait">On the road</span>`;
   }
   if (booking.status === "returned") {
-    return `<button type="button" class="table-btn table-btn-main inspect-btn" data-ref="${booking.ref}">Inspect</button>`;
+    return `<button type="button" class="table-btn table-btn-main inspect-btn" data-ref="${escapeHTML(booking.ref)}">Inspect</button>`;
   }
   if (booking.status === "inspected") {
     return `<span class="table-wait">Waiting for payment</span>`;
@@ -99,10 +103,17 @@ function displayTable(list) {
 
   for (const booking of newestFirst) {
     const car = findCar(booking.carId);
+
+    // phone and licence number (older sample bookings may not have them)
+    let contact = "";
+    if (booking.phone) {
+      contact = `<span class="table-sub">${escapeHTML(booking.phone)} · ${escapeHTML(booking.licence)}</span>`;
+    }
+
     html += `
       <tr>
-        <td>${booking.ref}</td>
-        <td>${booking.name}</td>
+        <td>${escapeHTML(booking.ref)}</td>
+        <td>${escapeHTML(booking.name)}${contact}</td>
         <td>${car.name}</td>
         <td>${formatDate(booking.pickupDate)} · ${formatPeriod(booking.duration, booking.period)}</td>
         <td><span class="status ${statusClass[booking.status]}">${statusText[booking.status]}</span></td>
@@ -120,21 +131,65 @@ function fillInspectOptions(list) {
   for (const booking of list) {
     if (booking.status === "returned") {
       const car = findCar(booking.carId);
-      html += `<option value="${booking.ref}">${booking.ref} - ${car.name} - ${booking.name}</option>`;
+      html += `<option value="${escapeHTML(booking.ref)}">${escapeHTML(booking.ref)} - ${car.name} - ${escapeHTML(booking.name)}</option>`;
     }
   }
   inspectSelect.innerHTML = html;
 }
 
-// ---------- 8. Show everything again (after any change) ----------
+// ---------- 8. Show the fleet and which cars are out of service ----------
+const carStatusText = {
+  available: "Ready to rent",
+  repair: "Needs repair",
+  cleaning: "Needs cleaning"
+};
+
+function displayFleet() {
+  let html = "";
+  for (const car of cars) {
+    const status = getCarStatus(car.id);
+
+    let statusLabel = `<span class="status status-reserved">${carStatusText[status]}</span>`;
+    let action = `<span class="table-wait">-</span>`;
+    if (car.available === false) {
+      statusLabel = `<span class="status status-paid">Not in service</span>`;
+    } else if (status !== "available") {
+      statusLabel = `<span class="status status-bill">${carStatusText[status]}</span>`;
+      action = `<button type="button" class="table-btn ready-btn" data-car="${car.id}">Mark Ready</button>`;
+    }
+
+    html += `
+      <tr>
+        <td>${car.name}</td>
+        <td>${car.type}</td>
+        <td>${car.branch}</td>
+        <td>${statusLabel}</td>
+        <td>${action}</td>
+      </tr>
+    `;
+  }
+  fleetBody.innerHTML = html;
+}
+
+// "Mark Ready": the car is fixed or cleaned and can be rented again
+fleetBody.addEventListener("click", function (event) {
+  const button = event.target;
+  if (button.classList.contains("ready-btn")) {
+    setCarStatus(button.dataset.car, "available");
+    refreshPage();
+  }
+});
+
+// ---------- 9. Show everything again (after any change) ----------
 function refreshPage() {
   const bookings = getBookings();
   displayStats(bookings);
   displayTable(bookings);
   fillInspectOptions(bookings);
+  displayFleet();
 }
 
-// ---------- 9. Work out the extra charges while staff tick the boxes ----------
+// ---------- 10. Work out the extra charges while staff tick the boxes ----------
 function getExtraCharges() {
   let total = 0;
   for (const box of damageChecks) {
@@ -173,7 +228,7 @@ inspectSelect.addEventListener("change", function () {
   inspectMessage.textContent = "";
 });
 
-// ---------- 10. Table buttons: Hand Over Keys and Inspect ----------
+// ---------- 11. Table buttons: Hand Over Keys and Inspect ----------
 tableBody.addEventListener("click", function (event) {
   const button = event.target;
   const ref = button.dataset.ref;
@@ -193,14 +248,54 @@ tableBody.addEventListener("click", function (event) {
   }
 });
 
-// ---------- 11. Save the inspection and create the final bill ----------
-inspectionForm.addEventListener("submit", function (event) {
+// ---------- 12. Make a small copy of a photo so it fits in localStorage ----------
+// FileReader reads the file, then a canvas shrinks it to max 800px wide as a JPEG
+function shrinkPhoto(file) {
+  return new Promise(function (resolve, reject) {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = function () {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = function () {
+        const scale = Math.min(1, 800 / img.width);
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.7));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------- 13. Save the inspection and create the final bill ----------
+inspectionForm.addEventListener("submit", async function (event) {
   event.preventDefault();
+  inspectMessage.classList.remove("form-success");
 
   const bookings = getBookings();
   const booking = findBooking(bookings, inspectSelect.value);
   if (booking === null) {
     inspectMessage.textContent = "Please choose a returned car first.";
+    return;
+  }
+
+  if (photosInput.files.length > MAX_PHOTOS) {
+    inspectMessage.textContent = "Please choose up to " + MAX_PHOTOS + " photos.";
+    return;
+  }
+
+  // shrink the photos so the customer can see them on the final bill
+  const photos = [];
+  try {
+    for (const file of photosInput.files) {
+      photos.push(await shrinkPhoto(file));
+    }
+  } catch (error) {
+    inspectMessage.textContent = "One of the photos could not be read. Please choose JPG or PNG images.";
     return;
   }
 
@@ -224,12 +319,24 @@ inspectionForm.addEventListener("submit", function (event) {
   booking.notes = notesInput.value.trim();
   booking.battery = Number(batteryInput.value);
   booking.km = Number(kmInput.value);
-  booking.photos = photosInput.files.length;
+  booking.photos = photos;
   booking.carStatus = carStatusSelect.value;
   booking.status = "inspected";
-  saveBookings(bookings);
 
-  inspectMessage.textContent = "Saved. The final bill for " + booking.ref + " is now on the customer's My Bookings page.";
+  // localStorage can hold about 5 MB, so save without photos if they do not fit
+  let message = "Saved. The final bill for " + booking.ref + " is now on the customer's My Bookings page.";
+  try {
+    saveBookings(bookings);
+  } catch (error) {
+    booking.photos = [];
+    saveBookings(bookings);
+    message = message + " The photos were too large to keep.";
+  }
+
+  // a car that needs repair or cleaning cannot be booked until staff mark it ready
+  setCarStatus(booking.carId, carStatusSelect.value);
+
+  inspectMessage.textContent = message;
   inspectMessage.classList.add("form-success");
 
   inspectionForm.reset();
@@ -237,7 +344,7 @@ inspectionForm.addEventListener("submit", function (event) {
   refreshPage();
 });
 
-// ---------- 12. When the page opens ----------
+// ---------- 14. When the page opens ----------
 if (checkStaff() === true) {
   refreshPage();
   updateExtra();

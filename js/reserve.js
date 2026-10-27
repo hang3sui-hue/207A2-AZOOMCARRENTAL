@@ -13,6 +13,8 @@ const durationInput = document.querySelector("#duration");
 const carparkSelect = document.querySelector("#return-carpark");
 const nameInput = document.querySelector("#full-name");
 const emailInput = document.querySelector("#email");
+const phoneInput = document.querySelector("#phone");
+const licenceInput = document.querySelector("#licence");
 const cardNumberInput = document.querySelector("#card-number");
 const cardExpiryInput = document.querySelector("#card-expiry");
 const cardCvvInput = document.querySelector("#card-cvv");
@@ -34,11 +36,12 @@ const closeDialogButton = document.querySelector("#close-dialog");
 
 const DEPOSIT = 500;
 
-// ---------- 2. Fill the car drop-down (only cars that are available) ----------
+// ---------- 2. Fill the car drop-down (only cars that can be rented) ----------
+// cars marked "repair" or "cleaning" by staff are left out
 function fillCarOptions() {
   let html = `<option value="">-- Please choose a car --</option>`;
   for (const car of cars) {
-    if (car.available === true) {
+    if (canBeRented(car)) {
       html += `<option value="${car.id}">${car.name} - ${car.type} - $${car.pricePerDay} / day</option>`;
     }
   }
@@ -196,10 +199,26 @@ reserveForm.addEventListener("submit", function (event) {
     return;
   }
 
-  // the pick-up date cannot be in the past
-  const todayText = new Date().toISOString().slice(0, 10);
-  if (dateInput.value < todayText) {
+  // the pick-up date cannot be in the past (local date, not UTC)
+  if (dateInput.value < todayText()) {
     formError.textContent = "The pick-up date cannot be in the past.";
+    return;
+  }
+
+  // the car must still be free to rent
+  const car = findCar(carSelect.value);
+  if (car === null || canBeRented(car) === false) {
+    formError.textContent = "Sorry, this car cannot be booked right now. Please choose another car.";
+    fillCarOptions();
+    return;
+  }
+
+  // the car must not be booked by someone else on the same days
+  const returnDate = addDays(dateInput.value, rentalDays(getChosenPeriod(), Number(durationInput.value)));
+  const clash = findClash(car.id, dateInput.value, returnDate);
+  if (clash !== null) {
+    formError.textContent = car.name + " is already booked from " + formatDate(clash.pickupDate) +
+      " to " + formatDate(getReturnDate(clash)) + ". Please choose other dates or another car.";
     return;
   }
 
@@ -209,6 +228,8 @@ reserveForm.addEventListener("submit", function (event) {
     ref: makeBookingRef(bookings),
     name: nameInput.value.trim(),
     email: user.email,
+    phone: phoneInput.value.trim(),
+    licence: licenceInput.value.trim().toUpperCase(),
     carId: Number(carSelect.value),
     branch: branchSelect.value,
     pickupDate: dateInput.value,
@@ -240,13 +261,17 @@ closeDialogButton.addEventListener("click", function () {
 fillCarOptions();
 
 // the earliest pick-up date is today
-dateInput.min = new Date().toISOString().slice(0, 10);
+dateInput.min = todayText();
 
 // if the customer clicked "Reserve" on the Cars page, choose that car (reserve.html?car=3)
 const pageAddress = new URLSearchParams(window.location.search);
 const carFromCarsPage = pageAddress.get("car");
 if (carFromCarsPage !== null) {
   carSelect.value = carFromCarsPage;
+  // the car is not in the list (booked out or in service)
+  if (carSelect.value === "") {
+    formError.textContent = "Sorry, that car cannot be booked right now. Please choose another car.";
+  }
 }
 
 // if the customer is logged in, fill in the name and email for them
