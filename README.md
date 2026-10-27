@@ -31,7 +31,7 @@ Other pages:
 
 ## Try it
 
-Open `index.html` in a browser, or use the live site (link coming soon).
+**Live site:** https://hang3sui-hue.github.io/207A2-AZOOMCARRENTAL/ (or open `index.html` in a browser).
 
 Demo accounts:
 
