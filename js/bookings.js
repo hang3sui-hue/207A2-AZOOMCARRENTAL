@@ -199,7 +199,7 @@ function displayBookings() {
   // not logged in -> ask the user to log in
   if (user === null || user.role !== "customer") {
     userNameText.textContent = "Guest";
-    bookingList.innerHTML = makeMessageCard("Please log in", "Log in as a customer to see your bookings.", "login.html", "Go to Login");
+    bookingList.innerHTML = makeMessageCard("Please log in", "Log in as a customer to see your bookings.", loginLink("bookings.html"), "Go to Login");
     return;
   }
 

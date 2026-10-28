@@ -44,6 +44,13 @@ function loginAs(user) {
 
   if (user.role === "staff") {
     window.location.href = "staff.html";
+    return;
+  }
+
+  // a customer goes back to the page they came from (e.g. the Reserve page), or to My Bookings
+  const nextPage = safeNextPage(new URLSearchParams(window.location.search).get("next"));
+  if (nextPage !== null) {
+    window.location.href = nextPage;
   } else {
     window.location.href = "bookings.html";
   }

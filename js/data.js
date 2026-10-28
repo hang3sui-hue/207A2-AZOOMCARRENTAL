@@ -57,7 +57,7 @@ const cars = [
     pricePerMonth: 2590,
     branch: "Queen Branch",
     image: "images/car-4.jpg",
-    available: false
+    available: false           // not offered at the moment (e.g. out for its yearly service)
   },
   {
     id: 5,
@@ -263,6 +263,20 @@ function findCar(id) {
 // the user who is logged in (or null)
 function getCurrentUser() {
   return loadData("azoomUser", null);
+}
+
+// link to the login page that comes back to this page after login
+// e.g. loginLink("reserve.html?car=3") -> "login.html?next=reserve.html%3Fcar%3D3"
+function loginLink(nextPage) {
+  return "login.html?next=" + encodeURIComponent(nextPage);
+}
+
+// only go back to our own customer pages (never to another website)
+function safeNextPage(text) {
+  if (text !== null && /^(index|cars|reserve|bookings)\.html(\?car=\d+)?$/.test(text)) {
+    return text;
+  }
+  return null;
 }
 
 // all users: demo users + users who signed up on this browser

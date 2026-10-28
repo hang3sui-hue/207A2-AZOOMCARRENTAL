@@ -4,6 +4,13 @@
 // 3. Check the credit card details
 // 4. Save the booking and show the confirmation pop-up
 
+// ---------- 0. Only a logged-in customer can reserve ----------
+// otherwise go to the login page, and come back here (with the same car) after login
+const currentUser = getCurrentUser();
+if (currentUser === null || currentUser.role !== "customer") {
+  window.location.replace(loginLink("reserve.html" + window.location.search));
+}
+
 // ---------- 1. Get the HTML elements ----------
 const reserveForm = document.querySelector("#reserve-form");
 const carSelect = document.querySelector("#car-select");
@@ -183,7 +190,7 @@ reserveForm.addEventListener("submit", function (event) {
   // the customer must log in first
   const user = getCurrentUser();
   if (user === null || user.role !== "customer") {
-    formError.innerHTML = `Please <a href="login.html" class="text-link">log in as a customer</a> before you reserve a car.`;
+    formError.innerHTML = `Please <a href="${loginLink("reserve.html")}" class="text-link">log in as a customer</a> before you reserve a car.`;
     return;
   }
 
@@ -269,11 +276,10 @@ if (carFromCarsPage !== null) {
   }
 }
 
-// if the customer is logged in, fill in the name and email for them
-const loggedInUser = getCurrentUser();
-if (loggedInUser !== null && loggedInUser.role === "customer") {
-  nameInput.value = loggedInUser.name;
-  emailInput.value = loggedInUser.email;
+// fill in the name and email of the logged-in customer
+if (currentUser !== null) {
+  nameInput.value = currentUser.name;
+  emailInput.value = currentUser.email;
 }
 
 updateSummary();
