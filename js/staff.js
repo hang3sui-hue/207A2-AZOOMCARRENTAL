@@ -75,23 +75,23 @@ function displayStats(list) {
 }
 
 // ---------- 5. What to show in the "Action" column ----------
+// statuses where staff have nothing to do, only a short note
+const waitText = {
+  picked: "On the road",
+  inspected: "Waiting for payment",
+  paid: "Done",
+  cancelled: "Cancelled"
+};
+
 function makeAction(booking) {
+  const ref = escapeHTML(booking.ref);
   if (booking.status === "reserved") {
-    return `<button type="button" class="table-btn handover-btn" data-ref="${escapeHTML(booking.ref)}">Hand Over Keys</button>`;
-  }
-  if (booking.status === "picked") {
-    return `<span class="table-wait">On the road</span>`;
+    return `<button type="button" class="table-btn handover-btn" data-ref="${ref}">Hand Over Keys</button>`;
   }
   if (booking.status === "returned") {
-    return `<button type="button" class="table-btn table-btn-main inspect-btn" data-ref="${escapeHTML(booking.ref)}">Inspect</button>`;
+    return `<button type="button" class="table-btn table-btn-main inspect-btn" data-ref="${ref}">Inspect</button>`;
   }
-  if (booking.status === "inspected") {
-    return `<span class="table-wait">Waiting for payment</span>`;
-  }
-  if (booking.status === "paid") {
-    return `<span class="table-wait">Done</span>`;
-  }
-  return `<span class="table-wait">Cancelled</span>`;
+  return `<span class="table-wait">${waitText[booking.status]}</span>`;
 }
 
 // ---------- 6. Show the table of all bookings ----------
@@ -190,6 +190,11 @@ function refreshPage() {
 }
 
 // ---------- 10. Work out the extra charges while staff tick the boxes ----------
+// the text next to a damage checkbox, e.g. "Scratch on body"
+function getDamageName(box) {
+  return box.parentElement.querySelector(".damage-name").textContent;
+}
+
 function getExtraCharges() {
   let total = 0;
   for (const box of damageChecks) {
@@ -211,8 +216,7 @@ inspectionForm.addEventListener("input", updateExtra);
 // if the battery is below 20%, tick "Battery below 20%" for the staff
 batteryInput.addEventListener("input", function () {
   for (const box of damageChecks) {
-    const name = box.parentElement.querySelector(".damage-name").textContent;
-    if (name === "Battery below 20%") {
+    if (getDamageName(box) === "Battery below 20%") {
       box.checked = batteryInput.value !== "" && Number(batteryInput.value) < 20;
     }
   }
@@ -234,10 +238,7 @@ tableBody.addEventListener("click", function (event) {
   const ref = button.dataset.ref;
 
   if (button.classList.contains("handover-btn")) {
-    const bookings = getBookings();
-    const booking = findBooking(bookings, ref);
-    booking.status = "picked";
-    saveBookings(bookings);
+    updateBooking(ref, { status: "picked" });   // in data.js
     refreshPage();
   }
 
@@ -303,8 +304,7 @@ inspectionForm.addEventListener("submit", async function (event) {
   const damages = [];
   for (const box of damageChecks) {
     if (box.checked === true) {
-      const name = box.parentElement.querySelector(".damage-name").textContent;
-      damages.push({ name: name, fee: Number(box.value) });
+      damages.push({ name: getDamageName(box), fee: Number(box.value) });
     }
   }
 

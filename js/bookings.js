@@ -49,14 +49,9 @@ function makeBill(booking) {
   rows += `<tr><td>Deposit</td><td class="bill-amount bill-minus">- $${booking.deposit}</td></tr>`;
 
   // extra charges are taken from the deposit first
-  let toPay = booking.extra - booking.deposit;
-  let refund = booking.deposit - booking.extra;
-  if (toPay < 0) {
-    toPay = 0;
-  }
-  if (refund < 0) {
-    refund = 0;
-  }
+  // Math.max(0, x) means "x, but never below 0"
+  const toPay = Math.max(0, booking.extra - booking.deposit);
+  const refund = Math.max(0, booking.deposit - booking.extra);
 
   let notes = "";
   if (booking.notes !== "") {
@@ -70,7 +65,8 @@ function makeBill(booking) {
     for (const photo of booking.photos) {
       // only show real image data, nothing else
       if (String(photo).startsWith("data:image/")) {
-        photos += `<a href="${photo}" target="_blank"><img src="${photo}" alt="Photo of damage" class="bill-photo"></a>`;
+        const safePhoto = escapeHTML(photo);
+        photos += `<a href="${safePhoto}" target="_blank"><img src="${safePhoto}" alt="Photo of damage" class="bill-photo"></a>`;
       }
     }
     photos += `</div>`;
@@ -100,38 +96,39 @@ function makeBill(booking) {
 }
 
 // ---------- 4. Make the part that changes with the status (buttons / forms) ----------
+// statuses that only need a short message
+const statusHint = {
+  returned: "Thank you. Our staff will check the car soon, then your final bill will show here.",
+  paid: "All done. Thank you for driving with AZoom.",
+  cancelled: "This booking was cancelled. Your payment will be refunded to your card."
+};
+
 function makeActionPart(booking) {
+  const ref = escapeHTML(booking.ref);
+
   if (booking.status === "reserved") {
     return `
       <div class="booking-actions">
         <p class="action-hint">Visit the branch with your licence. Our staff will hand you the keys.</p>
-        <button type="button" class="btn pickup-btn" data-ref="${escapeHTML(booking.ref)}">Pick Up Car at Office</button>
-        <button type="button" class="ViewCars cancel-btn" data-ref="${escapeHTML(booking.ref)}">Cancel Booking</button>
+        <button type="button" class="btn pickup-btn" data-ref="${ref}">Pick Up Car at Office</button>
+        <button type="button" class="ViewCars cancel-btn" data-ref="${ref}">Cancel Booking</button>
       </div>
     `;
   }
 
   if (booking.status === "picked") {
     return `
-      <form class="return-form" data-ref="${escapeHTML(booking.ref)}">
-        <label for="park-${escapeHTML(booking.ref)}" class="form-label">Where did you park the car?</label>
-        <select id="park-${escapeHTML(booking.ref)}" class="form-input return-park" required>
+      <form class="return-form" data-ref="${ref}">
+        <label for="park-${ref}" class="form-label">Where did you park the car?</label>
+        <select id="park-${ref}" class="form-input return-park" required>
           <option value="">-- Choose a car park --</option>
           <option value="King Road Car Park">Level B1, King Road Car Park</option>
           <option value="Queen Road Car Park">Level 1, Queen Road Car Park</option>
         </select>
-        <label for="bay-${escapeHTML(booking.ref)}" class="form-label">Parking bay number</label>
-        <input type="text" id="bay-${escapeHTML(booking.ref)}" class="form-input return-bay" placeholder="B1-24" required>
+        <label for="bay-${ref}" class="form-label">Parking bay number</label>
+        <input type="text" id="bay-${ref}" class="form-input return-bay" placeholder="B1-24" required>
         <button type="submit" class="btn return-btn">Return Car</button>
       </form>
-    `;
-  }
-
-  if (booking.status === "returned") {
-    return `
-      <div class="booking-actions">
-        <p class="action-hint">Thank you. Our staff will check the car soon, then your final bill will show here.</p>
-      </div>
     `;
   }
 
@@ -139,18 +136,9 @@ function makeActionPart(booking) {
     return makeBill(booking);
   }
 
-  if (booking.status === "paid") {
-    return `
-      <div class="booking-actions">
-        <p class="action-hint">All done. Thank you for driving with AZoom.</p>
-      </div>
-    `;
-  }
-
-  // cancelled
   return `
     <div class="booking-actions">
-      <p class="action-hint">This booking was cancelled. Your payment will be refunded to your card.</p>
+      <p class="action-hint">${statusHint[booking.status]}</p>
     </div>
   `;
 }
@@ -194,19 +182,24 @@ function makeBookingCard(booking) {
 }
 
 // ---------- 6. Show all bookings of this customer ----------
+// a card with a title, a short text and one button (used when there is nothing to list)
+function makeMessageCard(title, text, link, linkText) {
+  return `
+    <div class="booking-card">
+      <h2 class="booking-car">${title}</h2>
+      <p class="action-hint">${text}</p>
+      <a href="${link}" class="btn">${linkText}</a>
+    </div>
+  `;
+}
+
 function displayBookings() {
   const user = getCurrentUser();
 
   // not logged in -> ask the user to log in
   if (user === null || user.role !== "customer") {
     userNameText.textContent = "Guest";
-    bookingList.innerHTML = `
-      <div class="booking-card">
-        <h2 class="booking-car">Please log in</h2>
-        <p class="action-hint">Log in as a customer to see your bookings.</p>
-        <a href="login.html" class="btn">Go to Login</a>
-      </div>
-    `;
+    bookingList.innerHTML = makeMessageCard("Please log in", "Log in as a customer to see your bookings.", "login.html", "Go to Login");
     return;
   }
 
@@ -218,13 +211,7 @@ function displayBookings() {
   });
 
   if (myBookings.length === 0) {
-    bookingList.innerHTML = `
-      <div class="booking-card">
-        <h2 class="booking-car">No bookings yet</h2>
-        <p class="action-hint">Choose a premium electric car and start your journey.</p>
-        <a href="reserve.html" class="btn">Reserve Your Car</a>
-      </div>
-    `;
+    bookingList.innerHTML = makeMessageCard("No bookings yet", "Choose a premium electric car and start your journey.", "reserve.html", "Reserve Your Car");
     return;
   }
 
@@ -238,17 +225,9 @@ function displayBookings() {
   bookingList.innerHTML = html;
 }
 
-// ---------- 7. Change the status of one booking and save ----------
+// ---------- 7. Change one booking, save it, and show the list again ----------
 function changeBooking(ref, changes) {
-  const bookings = getBookings();
-  const booking = findBooking(bookings, ref);
-
-  // copy every changed value into the booking
-  for (const key in changes) {
-    booking[key] = changes[key];
-  }
-
-  saveBookings(bookings);
+  updateBooking(ref, changes);   // in data.js
   displayBookings();
 }
 

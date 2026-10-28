@@ -50,8 +50,7 @@ function fillCarOptions() {
 
 // ---------- 3. Which rental period is chosen? (day / week / month) ----------
 function getChosenPeriod() {
-  const chosen = document.querySelector('input[name="period"]:checked');
-  return chosen.value;
+  return getCheckedValue("period");   // in data.js
 }
 
 // ---------- 4. Work out the rental cost ----------
@@ -64,17 +63,21 @@ function getRentalCost() {
   const period = getChosenPeriod();
   const duration = Number(durationInput.value);
 
-  let price = car.pricePerDay;
-  if (period === "week") {
-    price = car.pricePerWeek;
-  } else if (period === "month") {
-    price = car.pricePerMonth;
-  }
-
-  return price * duration;
+  // "day" -> car.pricePerDay, "week" -> car.pricePerWeek, "month" -> car.pricePerMonth
+  const priceNames = { day: "pricePerDay", week: "pricePerWeek", month: "pricePerMonth" };
+  return car[priceNames[period]] * duration;
 }
 
 // ---------- 5. Update the Booking Summary box ----------
+// show a value in the summary, or "-" when nothing is chosen yet
+function showValue(element, value) {
+  if (value === "") {
+    element.textContent = "-";
+  } else {
+    element.textContent = value;
+  }
+}
+
 function updateSummary() {
   const car = findCar(carSelect.value);
 
@@ -86,20 +89,12 @@ function updateSummary() {
     summaryImg.alt = car.name;
   }
 
-  if (branchSelect.value === "") {
-    sumBranch.textContent = "-";
-  } else {
-    sumBranch.textContent = branchSelect.value;
-  }
+  showValue(sumBranch, branchSelect.value);
 
   sumDate.textContent = formatDate(dateInput.value);
   sumPeriod.textContent = formatPeriod(Number(durationInput.value), getChosenPeriod());
 
-  if (carparkSelect.value === "") {
-    sumCarpark.textContent = "-";
-  } else {
-    sumCarpark.textContent = carparkSelect.value;
-  }
+  showValue(sumCarpark, carparkSelect.value);
 
   const rental = getRentalCost();
   sumRental.textContent = "$" + rental;

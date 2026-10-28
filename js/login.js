@@ -17,8 +17,7 @@ const registerError = document.querySelector("#register-error");
 
 // ---------- 2. Which role is chosen? (Customer or Staff) ----------
 function getChosenRole() {
-  const chosen = document.querySelector('input[name="role"]:checked');
-  return chosen.value;
+  return getCheckedValue("role");   // in data.js
 }
 
 // ---------- 3. Change the email hint when the user switches role ----------
@@ -41,7 +40,7 @@ function loginAs(user) {
     email: user.email,
     role: user.role
   };
-  localStorage.setItem("azoomUser", JSON.stringify(userToSave));
+  saveData("azoomUser", userToSave);
 
   if (user.role === "staff") {
     window.location.href = "staff.html";
@@ -77,12 +76,11 @@ loginForm.addEventListener("submit", function (event) {
 });
 
 // clear the error message when the user types again
-emailInput.addEventListener("input", function () {
-  loginError.textContent = "";
-});
-passwordInput.addEventListener("input", function () {
-  loginError.textContent = "";
-});
+for (const input of [emailInput, passwordInput]) {
+  input.addEventListener("input", function () {
+    loginError.textContent = "";
+  });
+}
 
 // ---------- 6. Create account form ----------
 registerForm.addEventListener("submit", function (event) {
@@ -115,13 +113,6 @@ registerForm.addEventListener("submit", function (event) {
     name: name
   };
 
-  const saved = localStorage.getItem("azoomNewUsers");
-  let newUsers = [];
-  if (saved !== null) {
-    newUsers = JSON.parse(saved);
-  }
-  newUsers.push(newUser);
-  localStorage.setItem("azoomNewUsers", JSON.stringify(newUsers));
-
+  saveNewUser(newUser);
   loginAs(newUser);
 });

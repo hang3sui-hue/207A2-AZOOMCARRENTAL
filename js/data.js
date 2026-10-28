@@ -199,18 +199,45 @@ const statusClass = {
 
 // ===== Helper functions (used by many pages) =====
 
-// get all bookings (from localStorage, or the sample bookings the first time)
-function getBookings() {
-  const saved = localStorage.getItem("azoomBookings");
+// read a value from localStorage (or give back the default if nothing is saved yet)
+// if the saved text is broken, the default is used instead of crashing the page
+function loadData(key, defaultValue) {
+  const saved = localStorage.getItem(key);
   if (saved === null) {
-    return sampleBookings;
+    return defaultValue;
   }
-  return JSON.parse(saved);
+  try {
+    return JSON.parse(saved);
+  } catch (error) {
+    return defaultValue;
+  }
 }
 
-// save all bookings
+// save a value in localStorage as JSON text
+function saveData(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+// all bookings (the sample bookings the first time the site opens)
+function getBookings() {
+  return loadData("azoomBookings", sampleBookings);
+}
+
 function saveBookings(list) {
-  localStorage.setItem("azoomBookings", JSON.stringify(list));
+  saveData("azoomBookings", list);
+}
+
+// change some fields of one booking and save, e.g. updateBooking("AZ-1031", { status: "picked" })
+function updateBooking(ref, changes) {
+  const bookings = getBookings();
+  const booking = findBooking(bookings, ref);
+  if (booking === null) {
+    return;
+  }
+  for (const key in changes) {
+    booking[key] = changes[key];
+  }
+  saveBookings(bookings);
 }
 
 // find one booking by its booking number
@@ -233,23 +260,26 @@ function findCar(id) {
   return null;
 }
 
-// get the user who is logged in (or null)
+// the user who is logged in (or null)
 function getCurrentUser() {
-  const saved = localStorage.getItem("azoomUser");
-  if (saved === null) {
-    return null;
-  }
-  return JSON.parse(saved);
+  return loadData("azoomUser", null);
 }
 
-// get all users: demo users + users who signed up
+// all users: demo users + users who signed up on this browser
 function getAllUsers() {
-  const saved = localStorage.getItem("azoomNewUsers");
-  let newUsers = [];
-  if (saved !== null) {
-    newUsers = JSON.parse(saved);
-  }
-  return users.concat(newUsers);
+  return users.concat(loadData("azoomNewUsers", []));
+}
+
+// add a user from the sign-up form
+function saveNewUser(user) {
+  const newUsers = loadData("azoomNewUsers", []);
+  newUsers.push(user);
+  saveData("azoomNewUsers", newUsers);
+}
+
+// the value of the chosen radio button in a group, e.g. getCheckedValue("period") -> "week"
+function getCheckedValue(groupName) {
+  return document.querySelector('input[name="' + groupName + '"]:checked').value;
 }
 
 // make text safe before putting it into innerHTML
@@ -322,11 +352,7 @@ function formatDate(text) {
 // Those cars cannot be booked until staff mark them ready again.
 
 function getCarStatuses() {
-  const saved = localStorage.getItem("azoomCarStatus");
-  if (saved === null) {
-    return {};
-  }
-  return JSON.parse(saved);
+  return loadData("azoomCarStatus", {});
 }
 
 function setCarStatus(carId, status) {
@@ -336,7 +362,7 @@ function setCarStatus(carId, status) {
   } else {
     statuses[carId] = status;
   }
-  localStorage.setItem("azoomCarStatus", JSON.stringify(statuses));
+  saveData("azoomCarStatus", statuses);
 }
 
 // "available", "repair" or "cleaning"

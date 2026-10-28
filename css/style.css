@@ -5,14 +5,14 @@
 :root {
   --black: #000000;
   --black-2: #111111;
-  --green: #0d1a15;  /* page background - pure black like a showroom */
-  --accent: #2ee59d;  /* very dark green band (almost black) */
-  --silver: #d6d6d6;  /* silver - main buttons and fine details */
+  --green: #0d1a15;
+  --accent: #2ee59d;  /* page background - pure black like a showroom */
+  --silver: #d6d6d6;  /* very dark green band (almost black) */
   --text: #e6e6e6;  /* silver - main buttons and fine details */
-  --muted: #8c8c8c;
-  --line: rgba(255, 255, 255, 0.1);  /* light silver text */
-  --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, "Times New Roman", serif;  /* grey text */
-  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;  /* fonts already installed on the computer - nothing is downloaded */
+  --muted: #8c8c8c;  /* silver - main buttons and fine details */
+  --line: rgba(255, 255, 255, 0.1);
+  --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, "Times New Roman", serif;  /* light silver text */
+  --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;  /* grey text */
 }
 
 /* ---------- 2. Base page ---------- */
@@ -50,7 +50,7 @@ header {
   padding: 22px 56px;
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
-  background-color: rgba(0, 0, 0, 0.8);  /* frosted glass effect */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .logo {
@@ -183,7 +183,6 @@ nav a.active {
   color: #555555;
 }
 
-
 .hero p {
   margin: 0 0 16px;
   font-size: 1rem;
@@ -237,8 +236,8 @@ nav a.active {
 
 .how-it-works {
   padding: 110px max(24px, calc((100% - 1200px) / 2));
-  text-align: center;  /* full width band, content stays max 1200px in the middle */
-  background-color: var(--black-2);
+  text-align: center;
+  background-color: var(--black-2);  /* full width band, content stays max 1200px in the middle */
 }
 
 .how-title,
@@ -342,7 +341,7 @@ nav a.active {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   background-color: var(--green);
-  transition: transform 0.6s;  /* fill the box without stretching */
+  transition: transform 0.6s;
 }
 
 .fleet-card:hover .fleet-img {
@@ -524,7 +523,8 @@ nav a.active {
   gap: 8px;
 }
 
-.filter-label {
+.filter-label,
+.extra-label {
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -720,7 +720,8 @@ textarea.form-input {
   resize: vertical;
 }
 
-.form-note {
+.form-note,
+.action-hint {
   margin: 0 0 6px;
   color: var(--muted);
   font-size: 0.9rem;
@@ -817,7 +818,7 @@ textarea.form-input {
   margin: 3px 0 0;
   accent-color: var(--accent);
   flex-shrink: 0;
-  cursor: pointer;  /* green tick */
+  cursor: pointer;
 }
 
 /* ---------- 14. Reserve page ---------- */
@@ -829,7 +830,7 @@ textarea.form-input {
   display: grid;
   grid-template-columns: 1fr 380px;
   gap: 40px;
-  align-items: start;  /* form on the left, summary on the right */
+  align-items: start;
 }
 
 .form-block {
@@ -857,8 +858,8 @@ textarea.form-input {
   position: sticky;
   top: 110px;
   padding: 30px;
-  border: 1px solid var(--line);  /* stays on screen while the form scrolls */
-  background-color: var(--black-2);
+  border: 1px solid var(--line);
+  background-color: var(--black-2);  /* stays on screen while the form scrolls */
   border-top: 1px solid var(--line);
 }
 
@@ -1034,7 +1035,8 @@ textarea.form-input {
   gap: 30px;
 }
 
-.booking-card .btn {
+.booking-card .btn,
+.booking-card .ViewCars {
   cursor: pointer;
   font-family: var(--sans);
 }
@@ -1191,23 +1193,10 @@ textarea.form-input {
 
 .booking-actions,
 .return-form,
-.pay-form {
+.pay-form,
+.bill {
   padding-top: 20px;
   border-top: 1px solid var(--line);
-}
-
-.booking-actions .btn,
-.booking-actions .ViewCars,
-.return-form .btn,
-.pay-form .btn {
-  cursor: pointer;
-  font-family: var(--sans);
-}
-
-.action-hint {
-  margin: 0 0 6px;
-  color: var(--muted);
-  font-size: 0.9rem;
 }
 
 .return-form .form-input {
@@ -1216,11 +1205,6 @@ textarea.form-input {
 }
 
 /* final bill */
-
-.bill {
-  border-top: 1px solid var(--line);
-  padding-top: 20px;
-}
 
 .bill-title {
   font-size: 1.6rem;
@@ -1542,13 +1526,6 @@ textarea.form-input {
   padding: 20px 0;
   margin-bottom: 10px;
   border-top: 1px solid var(--line);
-}
-
-.extra-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted);
 }
 
 .footer-staff {
