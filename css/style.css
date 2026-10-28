@@ -48,6 +48,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 22px 56px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
   background-color: rgba(0, 0, 0, 0.8);
@@ -934,6 +935,7 @@ textarea.form-input {
 
 .modal::backdrop {
   background-color: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
