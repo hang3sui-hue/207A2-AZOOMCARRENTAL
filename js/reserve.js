@@ -43,13 +43,17 @@ const closeDialogButton = document.querySelector("#close-dialog");
 
 const DEPOSIT = 500;
 
-// ---------- 2. Fill the car drop-down (only cars that can be rented) ----------
-// cars marked "repair" or "cleaning" by staff are left out
+// ---------- 2. Fill the car drop-down ----------
+// every car is listed; cars that are rented out, in service or not offered
+// show "(Unavailable)" and cannot be chosen (disabled)
 function fillCarOptions() {
   let html = `<option value="">-- Please choose a car --</option>`;
   for (const car of cars) {
-    if (canBeRented(car)) {
-      html += `<option value="${car.id}">${car.name} - ${car.type} - $${car.pricePerDay} / day</option>`;
+    const text = `${car.name} - ${car.type} - $${car.pricePerDay} / day`;
+    if (canBeBookedNow(car)) {
+      html += `<option value="${car.id}">${text}</option>`;
+    } else {
+      html += `<option value="${car.id}" disabled>${text} (Unavailable)</option>`;
     }
   }
   carSelect.innerHTML = html;
@@ -209,7 +213,7 @@ reserveForm.addEventListener("submit", function (event) {
 
   // the car must still be free to rent
   const car = findCar(carSelect.value);
-  if (car === null || canBeRented(car) === false) {
+  if (car === null || canBeBookedNow(car) === false) {
     formError.textContent = "Sorry, this car cannot be booked right now. Please choose another car.";
     fillCarOptions();
     return;
@@ -270,8 +274,10 @@ const pageAddress = new URLSearchParams(window.location.search);
 const carFromCarsPage = pageAddress.get("car");
 if (carFromCarsPage !== null) {
   carSelect.value = carFromCarsPage;
-  // the car is not in the list (booked out or in service)
-  if (carSelect.value === "") {
+  // the car is not in the list, or it is marked (Unavailable)
+  const chosenOption = carSelect.selectedOptions[0];
+  if (carSelect.value === "" || chosenOption.disabled) {
+    carSelect.value = "";
     formError.textContent = "Sorry, that car cannot be booked right now. Please choose another car.";
   }
 }

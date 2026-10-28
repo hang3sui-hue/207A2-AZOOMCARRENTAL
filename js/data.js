@@ -393,6 +393,17 @@ function canBeRented(car) {
   return car.available === true && getCarStatus(car.id) === "available";
 }
 
+// is someone using this car today? (picked up, waiting for inspection, or reserved for today)
+function isRentedNow(carId) {
+  const today = todayText();
+  return findClash(carId, today, addDays(today, 1)) !== null;
+}
+
+// can a customer choose this car right now?
+function canBeBookedNow(car) {
+  return canBeRented(car) && isRentedNow(car.id) === false;
+}
+
 // find a booking that already uses this car between start and end (or null)
 // - reserved: blocks its own dates
 // - picked / returned: the car is not back or not checked yet, so it is busy until at least tomorrow

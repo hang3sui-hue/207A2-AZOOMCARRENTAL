@@ -1684,3 +1684,8 @@ textarea.form-input {
     font-size: 2.2rem;
   }
 }
+
+/* cars that cannot be chosen in the drop-down */
+.form-input option:disabled {
+  color: #6a6a6a;
+}

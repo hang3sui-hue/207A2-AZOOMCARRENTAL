@@ -38,16 +38,16 @@ function makeCarCard(car) {
   // three different cases:
   // - not offered at the moment (available: false in data.js) -> cannot be reserved
   // - marked "repair" / "cleaning" by staff after an inspection -> cannot be reserved
-  // - rented today by another customer -> can still be reserved for other dates
-  const today = todayText();
+  // - rented out today -> cannot be reserved until it comes back
   if (car.available === false) {
     badge = `<span class="badge badge-booked">Unavailable</span>`;
     button = `<span class="btn btn-disabled">Not Available</span>`;
   } else if (getCarStatus(car.id) !== "available") {
     badge = `<span class="badge badge-booked">In Service</span>`;
     button = `<span class="btn btn-disabled">Not Available</span>`;
-  } else if (findClash(car.id, today, addDays(today, 1)) !== null) {
-    badge = `<span class="badge badge-booked">Rented Today</span>`;
+  } else if (isRentedNow(car.id)) {
+    badge = `<span class="badge badge-booked">Rented Out</span>`;
+    button = `<span class="btn btn-disabled">Not Available</span>`;
   }
 
   return `
