@@ -1615,7 +1615,7 @@ textarea.form-input {
   .hero {
     min-height: 80vh;
     padding: 0 18px 60px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0.1) 75%), url("../images/hero.jpg") center / cover no-repeat, var(--black);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.92) 100%), url("../images/hero.jpg") center / cover no-repeat, var(--black);
   }
 
   .hero h1 {
